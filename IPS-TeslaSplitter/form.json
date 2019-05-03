@@ -1,0 +1,12 @@
+{
+  "elements":
+  [
+    { "name": "EMail", "type": "ValidationTextBox", "caption": "EMail" },
+    { "name": "Password", "type": "PasswordTextBox", "caption": "Password" },
+    { "name": "Client_ID", "type": "ValidationTextBox", "caption": "Client ID" },
+    { "name": "Client_Secret", "type": "ValidationTextBox", "caption": "Client_Secret" },
+  ],
+  "actions":
+  [
+  ]
+}
