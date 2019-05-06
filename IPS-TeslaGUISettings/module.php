@@ -1,11 +1,8 @@
 <?
 declare(strict_types=1);
-require_once __DIR__ . '/../libs/TeslaHelper.php';
 
 class TeslaGUISettings extends IPSModule
 {
-    use TeslaConnect,
-        TeslaHelper;
     public function Create()
     {
         //Never delete this line!
@@ -13,7 +10,12 @@ class TeslaGUISettings extends IPSModule
 
         $this->ConnectParent('{0DE3226B-E63E-87DD-7D2F-46C1A17866D9}');
 
-        $this->createGUISettingsVariables();
+        $this->RegisterVariableBoolean('gui_24_hour_time','GUI 24 Hour Time');
+        $this->RegisterVariableString('gui_charge_rate_units','GUI Charge Rate Units');
+        $this->RegisterVariableString('gui_distance_units','GUI Distance Units');
+        $this->RegisterVariableString('gui_range_display','GUI Range Display');
+        $this->RegisterVariableString('gui_temperature_units','GUI Temperature Units');
+        $this->RegisterVariableString('timestamp','timestamp');
     }
 
     public function ApplyChanges(){

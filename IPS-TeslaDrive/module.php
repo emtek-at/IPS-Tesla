@@ -1,11 +1,8 @@
 <?
 declare(strict_types=1);
-require_once __DIR__ . '/../libs/TeslaHelper.php';
 
 class TeslaDrive extends IPSModule
 {
-    use TeslaConnect,
-        TeslaHelper;
     public function Create()
     {
         //Never delete this line!
@@ -13,7 +10,18 @@ class TeslaDrive extends IPSModule
 
         $this->ConnectParent('{0DE3226B-E63E-87DD-7D2F-46C1A17866D9}');
 
-        $this->createDriveVariables();
+        $this->RegisterVariableString('gps_as_of','GPS as of');
+        $this->RegisterVariableInteger('heading','Heading');
+        $this->RegisterVariableString('latitude','Latitude');
+        $this->RegisterVariableString('longitude','Longitude');
+        $this->RegisterVariableString('native_latitude','Native Latitude');
+        $this->RegisterVariableInteger('native_location_supported','Native Location Supported');
+        $this->RegisterVariableString('native_longitude','Native Longitude');
+        $this->RegisterVariableString('native_type','Native Type');
+        $this->RegisterVariableInteger('power','Power');
+        $this->RegisterVariableString('shift_state','Shift State');
+        $this->RegisterVariableString('speed','Speed');
+        $this->RegisterVariableString('timestamp','Timestamp');
     }
 
     public function ApplyChanges(){
