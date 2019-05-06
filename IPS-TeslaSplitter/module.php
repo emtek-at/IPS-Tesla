@@ -74,7 +74,6 @@ class TeslaSplitter extends IPSModule
                 $Form['elements'][$FormElementCount]['options'] = $selectOptions;
             }
         }
-        IPS_LogMessage(__FUNCTION__,print_r($Form,true));
         return json_encode($Form);
     }
 
@@ -129,6 +128,91 @@ class TeslaSplitter extends IPSModule
             case 'SpeedLimitClearPin':
                 $params = (array)$data->Buffer->Params;
                 $result = $this->sendRequest('/vehicles/'.$this->ReadPropertyString('Vehicles').'/command/speed_limit_clear_pin',$params,'POST');
+                break;
+            case 'SetValetMode':
+                $params = (array)$data->Buffer->Params;
+                $result = $this->sendRequest('/vehicles/'.$this->ReadPropertyString('Vehicles').'/command/set_valet_mode',$params,'POST');
+                break;
+            case 'ResetValetPin':
+                $result = $this->sendRequest('/vehicles/'.$this->ReadPropertyString('Vehicles').'/command/reset_valet_pin',[],'POST');
+                break;
+            case 'SetSentryMode':
+                $params = (array)$data->Buffer->Params;
+                $result = $this->sendRequest('/vehicles/'.$this->ReadPropertyString('Vehicles').'/command/set_sentry_mode',$params,'POST');
+                break;
+            case 'DoorUnlock':
+                $result = $this->sendRequest('/vehicles/'.$this->ReadPropertyString('Vehicles').'/command/door_unlock',[],'POST');
+                break;
+            case 'DoorLock':
+                $result = $this->sendRequest('/vehicles/'.$this->ReadPropertyString('Vehicles').'/command/door_lock',[],'POST');
+                break;
+            case 'ActuateTrunk':
+                $params = (array)$data->Buffer->Params;
+                $result = $this->sendRequest('/vehicles/'.$this->ReadPropertyString('Vehicles').'/command/actuate_trunk',[],'POST');
+                break;
+            case 'SunRoofControl':
+                $params = (array)$data->Buffer->Params;
+                $result = $this->sendRequest('/vehicles/'.$this->ReadPropertyString('Vehicles').'/command/sun_roof_control',$params,'POST');
+                break;
+            case 'ChargePortDoorOpen':
+                $result = $this->sendRequest('/vehicles/'.$this->ReadPropertyString('Vehicles').'/command/charge_port_door_open',[],'POST');
+                break;
+            case 'ChargePortDoorClose':
+                $result = $this->sendRequest('/vehicles/'.$this->ReadPropertyString('Vehicles').'/command/charge_port_door_close',[],'POST');
+                break;
+            case 'ChargeStart':
+                $result = $this->sendRequest('/vehicles/'.$this->ReadPropertyString('Vehicles').'/command/charge_start',[],'POST');
+                break;
+            case 'ChargeStop':
+                $result = $this->sendRequest('/vehicles/'.$this->ReadPropertyString('Vehicles').'/command/charge_stop',[],'POST');
+                break;
+            case 'ChargeStandard':
+                $result = $this->sendRequest('/vehicles/'.$this->ReadPropertyString('Vehicles').'/command/charge_standard',[],'POST');
+                break;
+            case 'ChargeMaxRange':
+                $result = $this->sendRequest('/vehicles/'.$this->ReadPropertyString('Vehicles').'/command/charge_max_range',[],'POST');
+                break;
+            case 'SetChargeLimit':
+                $params = (array)$data->Buffer->Params;
+                $result = $this->sendRequest('/vehicles/'.$this->ReadPropertyString('Vehicles').'/command/set_charge_limit',$params,'POST');
+                break;
+            case 'AutoConditioningStart':
+                $result = $this->sendRequest('/vehicles/'.$this->ReadPropertyString('Vehicles').'/command/auto_conditioning_start',[],'POST');
+                break;
+            case 'AutoConditioningStop':
+                $result = $this->sendRequest('/vehicles/'.$this->ReadPropertyString('Vehicles').'/command/auto_conditioning_stop',[],'POST');
+                break;
+            case 'SetTemps':
+                $params = (array)$data->Buffer->Params;
+                $result = $this->sendRequest('/vehicles/'.$this->ReadPropertyString('Vehicles').'/command/set_temps',$params,'POST');
+                break;
+            case 'RemoteSeatHeaterRequest':
+                $params = (array)$data->Buffer->Params;
+                $result = $this->sendRequest('/vehicles/'.$this->ReadPropertyString('Vehicles').'/command/remote_seat_heater_request',$params,'POST');
+                break;
+            case 'RemoteSteeringWheelHeaterRequest':
+                $result = $this->sendRequest('/vehicles/'.$this->ReadPropertyString('Vehicles').'/command/remote_steering_wheel_heater_request',[],'POST');
+                break;
+            case 'MediaTogglePlayback':
+                $result = $this->sendRequest('/vehicles/'.$this->ReadPropertyString('Vehicles').'/command/media_toggle_playback',[],'POST');
+                break;
+            case 'MediaNextTrack':
+                $result = $this->sendRequest('/vehicles/'.$this->ReadPropertyString('Vehicles').'/command/media_next_track',[],'POST');
+                break;
+            case 'MediaPrevTrack':
+                $result = $this->sendRequest('/vehicles/'.$this->ReadPropertyString('Vehicles').'/command/media_prev_track',[],'POST');
+                break;
+            case 'MediaNextFav':
+                $result = $this->sendRequest('/vehicles/'.$this->ReadPropertyString('Vehicles').'/command/media_next_fav',[],'POST');
+                break;
+            case 'MediaPrevFav':
+                $result = $this->sendRequest('/vehicles/'.$this->ReadPropertyString('Vehicles').'/command/media_prev_fav',[],'POST');
+                break;
+            case 'MediaVolumeUp':
+                $result = $this->sendRequest('/vehicles/'.$this->ReadPropertyString('Vehicles').'/command/media_volume_up',[],'POST');
+                break;
+            case 'MediaVolumeDown':
+                $result = $this->sendRequest('/vehicles/'.$this->ReadPropertyString('Vehicles').'/command/media_volume_down',[],'POST');
                 break;
             default:
                 $this->SendDebug(__FUNCTION__, $data->Buffer->Command, 0);
