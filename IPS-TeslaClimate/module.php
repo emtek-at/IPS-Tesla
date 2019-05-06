@@ -51,7 +51,11 @@ class TeslaClimate extends IPSModule
     public function FetchData() {
 
         $Data['DataID'] = '{5147BF5F-95B4-BA79-CD98-F05D450F79CB}';
-        $Data['Buffer'] = 'ClimateState';
+
+        $Buffer['Command'] = 'ClimateState';
+        $Buffer['Params'] = '';
+
+        $Data['Buffer'] = $Buffer;
 
         $Data = json_encode($Data);
 
