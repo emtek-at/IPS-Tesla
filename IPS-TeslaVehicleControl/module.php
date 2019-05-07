@@ -1,8 +1,11 @@
 <?
 declare(strict_types=1);
+require_once __DIR__ . '/../libs/TeslaHelper.php';
 
 class TeslaVehicleControl extends IPSModule
 {
+    use TeslaHelper;
+
     public function Create()
     {
         //Never delete this line!
@@ -10,6 +13,65 @@ class TeslaVehicleControl extends IPSModule
 
         $this->ConnectParent('{0DE3226B-E63E-87DD-7D2F-46C1A17866D9}');
 
+        $this->RegisterVariablenProfiles();
+
+        $this->RegisterVariableInteger('WakeUP', 'WakeUP', 'Tesla.WakeUP');
+        $this->EnableAction('WakeUP');
+
+        $this->RegisterVariableInteger('Alerts', 'Alerts', 'Tesla.Alerts');
+        $this->EnableAction('Alerts');
+
+        $this->RegisterVariableInteger('RemoteStartDrive', 'Remote Start Drive', 'Tesla.RemoteStartDrive');
+        $this->EnableAction('RemoteStartDrive');
+
+        $this->RegisterVariableInteger('Doors', 'Doors', 'Tesla.Doors');
+        $this->EnableAction('Doors');
+
+        $this->RegisterVariableInteger('Trunk', 'Trunk', 'Tesla.Trunk');
+        $this->EnableAction('Trunk');
+
+        $this->RegisterVariableInteger('SunRoof', 'Sun Roof', 'Tesla.SunRoof');
+        $this->EnableAction('SunRoof');
+
+        $this->RegisterVariableInteger('ChargePort', 'Charge Port', 'Tesla.ChargePort');
+        $this->EnableAction('ChargePort');
+
+        $this->RegisterVariableInteger('ChargeControl', 'Charge Control', 'Tesla.ChargeControl');
+        $this->EnableAction('ChargeControl');
+
+        $IDChargeLimit = $this->RegisterVariableString('ChargeLimit', 'Charge Limit');
+        IPS_SetIcon($IDChargeLimit, "Battery");
+        $this->EnableAction('ChargeLimit');
+
+        $this->RegisterVariableInteger('ClimateAutoConditioning', 'Climate Auto Conditioning', 'Tesla.ClimateAutoConditioning');
+        $this->EnableAction('ClimateAutoConditioning');
+
+        $this->RegisterVariableFloat('DriverTemp', 'Driver Temperature', '~Temperature');
+        $this->EnableAction('DriverTemp');
+
+        $this->RegisterVariableFloat('PassengerTemp', 'Passenger Temperature', '~Temperature');
+        $this->EnableAction('PassengerTemp');
+
+        $this->RegisterVariableInteger('SetTemperature', 'Set Temperature', 'Tesla.SetTemperature');
+        $this->EnableAction('SetTemperature');
+
+        $this->RegisterVariableInteger('RemoteSeatHeaterHeater', 'Remote Seat Heater Heater', 'Tesla.RemoteSeatHeaterHeater');
+        $this->EnableAction('RemoteSeatHeaterHeater');
+
+        $this->RegisterVariableInteger('RemoteSeatHeaterLevel', 'Remote Seat Heater Level', 'Tesla.RemoteSeatHeaterLevel');
+        $this->EnableAction('RemoteSeatHeaterLevel');
+
+        $this->RegisterVariableInteger('SetRemoteSeatHeater', 'Set Remote Seat Heater', 'Tesla.SetRemoteSeatHeater');
+        $this->EnableAction('SetRemoteSeatHeater');
+
+        $this->RegisterVariableBoolean('RemoteSteeringWheelHeater', 'Remote Steering Wheel Heater', 'Tesla.RemoteSteeringWheelHeater');
+        $this->EnableAction('RemoteSteeringWheelHeater');
+
+        $this->RegisterVariableInteger('MediaPlayControl', 'Media Play Control', 'Tesla.MediaPlayControl');
+        $this->EnableAction('MediaPlayControl');
+
+        $this->RegisterVariableInteger('MediaVolume', 'Media Volume', 'Tesla.MediaVolume');
+        $this->EnableAction('MediaVolume');
     }
 
     public function ApplyChanges(){
@@ -632,5 +694,315 @@ class TeslaVehicleControl extends IPSModule
      *
      *
      **/
+
+
+
+    public function RequestAction($Ident, $Value)
+    {
+        $this->SendDebug(__FUNCTION__ . ' Ident', $Ident, 0);
+        $this->SendDebug(__FUNCTION__ . ' Value', $Value, 0);
+        switch ($Ident) {
+            case 'WakeUP':
+                $this->WakeUP();
+                break;
+            case 'Alerts':
+                switch ($Value) {
+                    case 1:
+                        $this->HonkHorn();
+                        break;
+                    case 2:
+                        $this->FlashLights();
+                        break;
+                    default:
+                        $this->SendDebug(__FUNCTION__.' '.$Ident, 'Undefined Value '. $Value, 0);
+                        break;
+                }
+                break;
+            case 'RemoteStartDrive':
+                $this->RemoteStartDrive();
+                break;
+            case 'Doors':
+                switch ($Value) {
+                    case 1:
+                        $this->DoorUnlock();
+                        break;
+                    case 2:
+                        $this->DoorLock();
+                        break;
+                    default:
+                        $this->SendDebug(__FUNCTION__.' '.$Ident, 'Undefined Value '. $Value, 0);
+                        break;
+                }
+                break;
+            case 'Trunk':
+                switch ($Value) {
+                    case 1:
+                        $this->ActuateTrunk('rear');
+                        break;
+                    case 2:
+                        $this->ActuateTrunk('front');
+                        break;
+                    default:
+                        $this->SendDebug(__FUNCTION__.' '.$Ident, 'Undefined Value '. $Value, 0);
+                        break;
+                }
+                break;
+            case 'SunRoof':
+                switch ($Value) {
+                    case 1:
+                        $this->SunRoofControl('vent');
+                        break;
+                    case 2:
+                        $this->SunRoofControl('close');
+                        break;
+                    default:
+                        $this->SendDebug(__FUNCTION__.' '.$Ident, 'Undefined Value '. $Value, 0);
+                        break;
+                }
+                break;
+            case 'ChargePort':
+                switch ($Value) {
+                    case 1:
+                        $this->ChargePortDoorOpen();
+                        break;
+                    case 2:
+                        $this->ChargePortDoorClose();
+                        break;
+                    default:
+                        $this->SendDebug(__FUNCTION__.' '.$Ident, 'Undefined Value '. $Value, 0);
+                        break;
+                }
+                break;
+            case 'ChargeControl':
+                switch ($Value) {
+                    case 1:
+                        $this->ChargeStart();
+                        break;
+                    case 2:
+                        $this->ChargeStop();
+                        break;
+                    case 3:
+                        $this->ChargePortStandard();
+                        break;
+                    case 4:
+                        $this->ChargeMaxRange();
+                        break;
+                    default:
+                        $this->SendDebug(__FUNCTION__.' '.$Ident, 'Undefined Value '. $Value, 0);
+                        break;
+                }
+                break;
+            case 'ChargeLimit':
+                $this->SetChargeLimit(intval($Value));
+                break;
+            case 'ClimateAutoConditioning':
+                switch ($Value) {
+                    case 1:
+                        $this->AutoConditioningStart();
+                        break;
+                    case 2:
+                        $this->AutoConditioningStop();
+                        break;
+                    default:
+                        $this->SendDebug(__FUNCTION__.' '.$Ident, 'Undefined Value '. $Value, 0);
+                        break;
+                }
+                break;
+            case 'DriverTemp':
+                SetValue(IPS_GetObjectIDByIdent('DriverTemp', $this->InstanceID),floatval($Value));
+                break;
+            case 'PassengerTemp':
+                SetValue(IPS_GetObjectIDByIdent('PassengerTemp', $this->InstanceID),floatval($Value));
+                break;
+            case 'SetTemperature':
+                $driver_temp = floatval(GetValue(IPS_GetObjectIDByIdent('DriverTemp', $this->InstanceID)));
+                $passenger_temp = floatval(GetValue(IPS_GetObjectIDByIdent('PassengerTemp', $this->InstanceID)));
+                $this->SetTemps($driver_temp,$passenger_temp);
+                break;
+            case 'RemoteSeatHeaterHeater':
+                SetValue(IPS_GetObjectIDByIdent('RemoteSeatHeaterHeater', $this->InstanceID),intval($Value));
+                break;
+            case 'RemoteSeatHeaterLevel':
+                SetValue(IPS_GetObjectIDByIdent('RemoteSeatHeaterLevel', $this->InstanceID),intval($Value));
+                break;
+            case 'RemoteSeatHeater':
+                $heater = intval(GetValue(IPS_GetObjectIDByIdent('RemoteSeatHeaterHeater', $this->InstanceID)));
+                $level = intval(GetValue(IPS_GetObjectIDByIdent('RemoteSeatHeaterLevel', $this->InstanceID)));
+                $this->RemoteSeatHeaterRequest($heater,$level);
+                break;
+            case 'RemoteSteeringWheelHeater':
+                $this->RemoteSteeringWheelHeaterRequest($Value);
+                break;
+            case 'MediaPlayControl':
+                switch ($Value) {
+                    case 1:
+                        $this->MediaTogglePlayback();
+                        break;
+                    case 2:
+                        $this->MediaNextTrack();
+                        break;
+                    case 3:
+                        $this->MediaPrevTrack();
+                        break;
+                    case 4:
+                        $this->MediaNextFav();
+                        break;
+                    case 5:
+                        $this->MediaPrevFav();
+                        break;
+                    default:
+                        $this->SendDebug(__FUNCTION__.' '.$Ident, 'Undefined Value '. $Value, 0);
+                        break;
+                }
+                break;
+            case 'MediaVolume':
+                switch ($Value) {
+                    case 1:
+                        $this->MediaVolumeUp();
+                        break;
+                    case 2:
+                        $this->MediaVolumeDown();
+                        break;
+                    default:
+                        $this->SendDebug(__FUNCTION__.' '.$Ident, 'Undefined Value '. $Value, 0);
+                        break;
+                }
+                break;
+            default:
+                $this->SendDebug(__FUNCTION__, 'Undefined Ident', 0);
+                break;
+        }
+    }
+
+    private function RegisterVariablenProfiles()
+    {
+        //Profile for Alerts
+        if (!IPS_VariableProfileExists('Tesla.Alert')) {
+            $Associations = array();
+            $Associations[] = array(1, $this->Translate('Honk Horn'), 'Speaker', 0xFF0000);
+            $Associations[] = array(2, $this->Translate('Flash Lights'), 'Light', 0xFFFF00);
+            $this->RegisterProfileIntegerEx('Tesla.Alerts', 'Alert', '', '', $Associations);
+        }
+
+        //Profile for Doors
+        if (!IPS_VariableProfileExists('Tesla.Doors')) {
+            $Associations = array();
+            $Associations[] = array(1, $this->Translate('Unlock'), '', 0xFF0000);
+            $Associations[] = array(2, $this->Translate('Lock'), '', 0x7CFC00);
+            $this->RegisterProfileIntegerEx('Tesla.Doors', 'Lock', '', '', $Associations);
+        }
+
+        //Trunk
+        if (!IPS_VariableProfileExists('Tesla.Trunk')) {
+            $Associations = array();
+            $Associations[] = array(1, $this->Translate('Rear'), '', -1);
+            $Associations[] = array(2, $this->Translate('Front'), '', -1);
+            $this->RegisterProfileIntegerEx('Tesla.Trunk', 'Information', '', '', $Associations);
+        }
+
+        //Profile for SunRoof
+        if (!IPS_VariableProfileExists('Tesla.SunRoof')) {
+            $Associations = array();
+            $Associations[] = array(1, $this->Translate('Vent'), '', 0xFF0000);
+            $Associations[] = array(2, $this->Translate('Close'), '', 0x7CFC00);
+            $this->RegisterProfileIntegerEx('Tesla.SunRoof', 'Sun', '', '', $Associations);
+        }
+
+        //Profile for Charge Port
+        if (!IPS_VariableProfileExists('Tesla.ChargePort')) {
+            $Associations = array();
+            $Associations[] = array(1, $this->Translate('Open'), '', 0xFF0000);
+            $Associations[] = array(2, $this->Translate('Close'), '', 0x7CFC00);
+            $this->RegisterProfileIntegerEx('Tesla.ChargePort', 'Lock', '', '', $Associations);
+        }
+
+        //Profile For Charge Control
+        if (!IPS_VariableProfileExists('Tesla.ChargeControl')) {
+            $Associations = array();
+            $Associations[] = array(1, $this->Translate('Start'), '', -1);
+            $Associations[] = array(2, $this->Translate('Stop'), '', -1);
+            $Associations[] = array(3, $this->Translate('Standard'), '', -1);
+            $Associations[] = array(4, $this->Translate('Max Range'), '', -1);
+            $this->RegisterProfileIntegerEx('Tesla.ChargeControl', 'Battery', '', '', $Associations);
+        }
+
+        //Profile for Climate Auto Conditioning
+        if (!IPS_VariableProfileExists('Tesla.ClimateAutoConditioning')) {
+            $Associations = array();
+            $Associations[] = array(1, $this->Translate('Start'), '', -1);
+            $Associations[] = array(2, $this->Translate('Stop'), '', -1);
+            $this->RegisterProfileIntegerEx('Tesla.ClimateAutoConditioning', 'Climate', '', '', $Associations);
+        }
+
+        //Profile for Climate Remote Seat Heater Heater
+        if (!IPS_VariableProfileExists('Tesla.RemoteSeatHeaterHeater')) {
+            $Associations = array();
+            $Associations[] = array(1, $this->Translate('Driver'), '', -1);
+            $Associations[] = array(2, $this->Translate('Passenger'), '', -1);
+            $Associations[] = array(3, $this->Translate('Rear left'), '', -1);
+            $Associations[] = array(4, $this->Translate('Rear center'), '', -1);
+            $Associations[] = array(5, $this->Translate('Rear right'), '', -1);
+            $this->RegisterProfileIntegerEx('Tesla.RemoteSeatHeaterHeater', 'Climate', '', '', $Associations);
+        }
+
+        //Profile for Climate Remote Seat Heater Level
+        if (!IPS_VariableProfileExists('Tesla.RemoteSeatHeaterLevel')) {
+            $this->RegisterProfileInteger('Tesla.RemoteSeatHeaterLevel','Climate','','', 0,3,1);
+        }
+        //Profile for Remote Seat Heater
+        if (!IPS_VariableProfileExists('Tesla.SetRemoteSeatHeater')) {
+            $Associations = array();
+            $Associations[] = array(1, $this->Translate('Set Remote Seat Heater'), '', -1);
+            $this->RegisterProfileIntegerEx('Tesla.SetRemoteSeatHeater', 'Temperature', '', '', $Associations);
+        }
+
+        //Profile for Climate Remote Steering Wheel Heater
+        if (!IPS_VariableProfileExists('Tesla.RemoteSteeringWheelHeater')) {
+            $this->RegisterProfileBooleanEx('Tesla.RemoteSteeringWheelHeater', 'Climate', '', '', array(
+                array(false, 'Off',  '', -1),
+                array(true, 'On',  '', -1),
+            ));
+        }
+
+        //Profile for Media Playback
+        if (!IPS_VariableProfileExists('Tesla.MediaPlayControl')) {
+            $Associations = array();
+            $Associations[] = array(1, $this->Translate('Toggle Playback'), '', -1);
+            $Associations[] = array(2, $this->Translate('Next Track'), '', -1);
+            $Associations[] = array(3, $this->Translate('Prev Track'), '', -1);
+            $Associations[] = array(4, $this->Translate('Next Favorite'), '', -1);
+            $Associations[] = array(5, $this->Translate('Prev Favorite'), '', -1);
+            $this->RegisterProfileIntegerEx('Tesla.MediaPlayControl', 'Music', '', '', $Associations);
+        }
+
+        //Profile for Media Volume
+        if (!IPS_VariableProfileExists('Tesla.MediaVolume')) {
+            $Associations = array();
+            $Associations[] = array(1, $this->Translate('Up'), '', -1);
+            $Associations[] = array(2, $this->Translate('Down'), '', -1);
+            $this->RegisterProfileIntegerEx('Tesla.MediaVolume', 'Speaker', '', '', $Associations);
+        }
+
+        //Profile for Set Temperature
+        if (!IPS_VariableProfileExists('Tesla.SetTemperature')) {
+            $Associations = array();
+            $Associations[] = array(1, $this->Translate('Set Temperature'), '', -1);
+            $this->RegisterProfileIntegerEx('Tesla.SetTemperature', 'Temperature', '', '', $Associations);
+        }
+
+        //Profile for WakeUP
+        if (!IPS_VariableProfileExists('Tesla.WakeUP')) {
+            $Associations = array();
+            $Associations[] = array(1, $this->Translate('WakeUP'), '', -1);
+            $this->RegisterProfileIntegerEx('Tesla.WakeUP', 'Clock', '', '', $Associations);
+        }
+
+        //Profile for Remote Start Drive
+        if (!IPS_VariableProfileExists('Tesla.RemoteStartDrive')) {
+            $Associations = array();
+            $Associations[] = array(1, $this->Translate('Remote Start'), '', -1);
+            $this->RegisterProfileIntegerEx('Tesla.RemoteStartDrive', 'Key', '', '', $Associations);
+        }
+    }
 }
 ?>

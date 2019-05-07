@@ -22,6 +22,7 @@ class TeslaSplitter extends IPSModule
 
         $this->RegisterAttributeString("Token", "");
         $this->RegisterAttributeString("TokenExpires", "");
+
     }
 
     public function ApplyChanges(){
