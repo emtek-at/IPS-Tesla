@@ -30,8 +30,8 @@ class TeslaCharging extends IPSModule
         $this->RegisterVariableBoolean('charge_to_max_range','Charge To Max Range');
         $this->RegisterVariableInteger('charger_actual_current','Charger Actual Current');
         $this->RegisterVariableString('charger_phases','Charger Phases');
-        $this->RegisterVariableInteger('charger_pilot_current','Charger PPilot Current');
-        $this->RegisterVariableInteger('charger_power','ChargerPower');
+        $this->RegisterVariableInteger('charger_pilot_current','Charger Pilot Current');
+        $this->RegisterVariableInteger('charger_power','Charger Power');
         $this->RegisterVariableInteger('charger_voltage','Charger Voltage');
         $this->RegisterVariableString('charging_state','Charging State');
         $this->RegisterVariableString('conn_charge_cable','Conn Charge Cable');
