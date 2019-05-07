@@ -1,4 +1,5 @@
-<?
+<?php
+
 declare(strict_types=1);
 
 class TeslaVehicleConfig extends IPSModule
@@ -36,14 +37,15 @@ class TeslaVehicleConfig extends IPSModule
         $this->RegisterVariableString('wheel_type', 'Wheel Type');
     }
 
-    public function ApplyChanges(){
+    public function ApplyChanges()
+    {
 
         //Never delete this line!
         parent::ApplyChanges();
     }
 
-    public function FetchData() {
-
+    public function FetchData()
+    {
         $Data['DataID'] = '{5147BF5F-95B4-BA79-CD98-F05D450F79CB}';
 
         $Buffer['Command'] = 'VehicleConfig';
@@ -52,13 +54,11 @@ class TeslaVehicleConfig extends IPSModule
         $Data['Buffer'] = $Buffer;
         $Data = json_encode($Data);
 
-        $Data = json_decode($this->SendDataToParent($Data),true);
+        $Data = json_decode($this->SendDataToParent($Data), true);
 
-        foreach ($Data['response'] as $key => $Value ) {
-            $this->SendDebug(__FUNCTION__. ' '.$key,$key,0);
-            $this->SetValue($key,$Value);
+        foreach ($Data['response'] as $key => $Value) {
+            $this->SendDebug(__FUNCTION__ . ' ' . $key, $key, 0);
+            $this->SetValue($key, $Value);
         }
     }
 }
-
-?>
