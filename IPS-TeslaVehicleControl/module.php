@@ -1,5 +1,4 @@
-<?php
-
+<?
 declare(strict_types=1);
 require_once __DIR__ . '/../libs/TeslaHelper.php';
 
@@ -16,74 +15,72 @@ class TeslaVehicleControl extends IPSModule
 
         $this->RegisterVariablenProfiles();
 
-        $this->RegisterVariableInteger('WakeUP', 'WakeUP', 'Tesla.WakeUP');
+        $this->RegisterVariableInteger('WakeUP', $this->Translate('Wake UP'), 'Tesla.WakeUP', 1);
         $this->EnableAction('WakeUP');
 
-        $this->RegisterVariableInteger('Alerts', 'Alerts', 'Tesla.Alerts');
+        $this->RegisterVariableInteger('Alerts', $this->Translate('Alerts'), 'Tesla.Alerts', 2);
         $this->EnableAction('Alerts');
 
-        $this->RegisterVariableInteger('RemoteStartDrive', 'Remote Start Drive', 'Tesla.RemoteStartDrive');
+        $this->RegisterVariableInteger('RemoteStartDrive', $this->Translate('Remote Start Drive'), 'Tesla.RemoteStartDrive',3 );
         $this->EnableAction('RemoteStartDrive');
 
-        $this->RegisterVariableInteger('Doors', 'Doors', 'Tesla.Doors');
+        $this->RegisterVariableInteger('Doors', $this->Translate('Doors'), 'Tesla.Doors' ,4 );
         $this->EnableAction('Doors');
 
-        $this->RegisterVariableInteger('Trunk', 'Trunk', 'Tesla.Trunk');
+        $this->RegisterVariableInteger('Trunk', $this->Translate('Trunk'), 'Tesla.Trunk' ,5);
         $this->EnableAction('Trunk');
 
-        $this->RegisterVariableInteger('SunRoof', 'Sun Roof', 'Tesla.SunRoof');
+        $this->RegisterVariableInteger('SunRoof', $this->Translate('Sun Roof'), 'Tesla.SunRoof' ,6);
         $this->EnableAction('SunRoof');
 
-        $this->RegisterVariableInteger('ChargePort', 'Charge Port', 'Tesla.ChargePort');
+        $this->RegisterVariableInteger('ChargePort', $this->Translate('Charge Port'), 'Tesla.ChargePort' ,6);
         $this->EnableAction('ChargePort');
 
-        $this->RegisterVariableInteger('ChargeControl', 'Charge Control', 'Tesla.ChargeControl');
+        $this->RegisterVariableInteger('ChargeControl', $this->Translate('Charge Control'), 'Tesla.ChargeControl' ,7);
         $this->EnableAction('ChargeControl');
 
-        $IDChargeLimit = $this->RegisterVariableString('ChargeLimit', 'Charge Limit');
-        IPS_SetIcon($IDChargeLimit, 'Battery');
+        $IDChargeLimit = $this->RegisterVariableString('ChargeLimit', $this->Translate('Charge Limit'),'', 8 );
+        IPS_SetIcon($IDChargeLimit, "Battery");
         $this->EnableAction('ChargeLimit');
 
-        $this->RegisterVariableInteger('ClimateAutoConditioning', 'Climate Auto Conditioning', 'Tesla.ClimateAutoConditioning');
+        $this->RegisterVariableInteger('ClimateAutoConditioning', $this->Translate('Climate Auto Conditioning'), 'Tesla.ClimateAutoConditioning', 9);
         $this->EnableAction('ClimateAutoConditioning');
 
-        $this->RegisterVariableFloat('DriverTemp', 'Driver Temperature', '~Temperature');
+        $this->RegisterVariableFloat('DriverTemp', $this->Translate('Driver Temperature'), '~Temperature' ,10);
         $this->EnableAction('DriverTemp');
 
-        $this->RegisterVariableFloat('PassengerTemp', 'Passenger Temperature', '~Temperature');
+        $this->RegisterVariableFloat('PassengerTemp', $this->Translate('Passenger Temperature'), '~Temperature', 11);
         $this->EnableAction('PassengerTemp');
 
-        $this->RegisterVariableInteger('SetTemperature', 'Set Temperature', 'Tesla.SetTemperature');
+        $this->RegisterVariableInteger('SetTemperature', $this->Translate('Set Temperature'), 'Tesla.SetTemperature',12);
         $this->EnableAction('SetTemperature');
 
-        $this->RegisterVariableInteger('RemoteSeatHeaterHeater', 'Remote Seat Heater Heater', 'Tesla.RemoteSeatHeaterHeater');
+        $this->RegisterVariableInteger('RemoteSeatHeaterHeater', $this->Translate('Remote Seat Heater Heater'), 'Tesla.RemoteSeatHeaterHeater',13);
         $this->EnableAction('RemoteSeatHeaterHeater');
 
-        $this->RegisterVariableInteger('RemoteSeatHeaterLevel', 'Remote Seat Heater Level', 'Tesla.RemoteSeatHeaterLevel');
+        $this->RegisterVariableInteger('RemoteSeatHeaterLevel', $this->Translate('Remote Seat Heater Level'), 'Tesla.RemoteSeatHeaterLevel' ,14);
         $this->EnableAction('RemoteSeatHeaterLevel');
 
-        $this->RegisterVariableInteger('SetRemoteSeatHeater', 'Set Remote Seat Heater', 'Tesla.SetRemoteSeatHeater');
+        $this->RegisterVariableInteger('SetRemoteSeatHeater', $this->Translate('Set Remote Seat Heater'), 'Tesla.SetRemoteSeatHeater' ,15);
         $this->EnableAction('SetRemoteSeatHeater');
 
-        $this->RegisterVariableBoolean('RemoteSteeringWheelHeater', 'Remote Steering Wheel Heater', 'Tesla.RemoteSteeringWheelHeater');
+        $this->RegisterVariableBoolean('RemoteSteeringWheelHeater', $this->Translate('Remote Steering Wheel Heater'), 'Tesla.RemoteSteeringWheelHeater' ,16);
         $this->EnableAction('RemoteSteeringWheelHeater');
 
-        $this->RegisterVariableInteger('MediaPlayControl', 'Media Play Control', 'Tesla.MediaPlayControl');
+        $this->RegisterVariableInteger('MediaPlayControl', $this->Translate('Media Play Control'), 'Tesla.MediaPlayControl' ,17);
         $this->EnableAction('MediaPlayControl');
 
-        $this->RegisterVariableInteger('MediaVolume', 'Media Volume', 'Tesla.MediaVolume');
+        $this->RegisterVariableInteger('MediaVolume', $this->Translate('Media Volume'), 'Tesla.MediaVolume' ,18);
         $this->EnableAction('MediaVolume');
     }
 
-    public function ApplyChanges()
-    {
+    public function ApplyChanges(){
 
         //Never delete this line!
         parent::ApplyChanges();
     }
 
-    public function WakeUP()
-    {
+    public function WakeUP() {
         $Data['DataID'] = '{5147BF5F-95B4-BA79-CD98-F05D450F79CB}';
 
         $Buffer['Command'] = 'WakeUP';
@@ -93,16 +90,15 @@ class TeslaVehicleControl extends IPSModule
 
         $Data = json_encode($Data);
 
-        $Data = json_decode($this->SendDataToParent($Data), true);
-        if (array_key_exists('result', $Data['response'])) {
+        $Data = json_decode($this->SendDataToParent($Data),true);
+        if (array_key_exists('result',$Data['response'])) {
             return $Data['response']['result'];
         } else {
             return false;
         }
     }
 
-    public function HonkHorn()
-    {
+    public function HonkHorn() {
         $Data['DataID'] = '{5147BF5F-95B4-BA79-CD98-F05D450F79CB}';
 
         $Buffer['Command'] = 'HonkHorn';
@@ -111,16 +107,15 @@ class TeslaVehicleControl extends IPSModule
         $Data['Buffer'] = $Buffer;
         $Data = json_encode($Data);
 
-        $Data = json_decode($this->SendDataToParent($Data), true);
-        if (array_key_exists('result', $Data['response'])) {
+        $Data = json_decode($this->SendDataToParent($Data),true);
+        if (array_key_exists('result',$Data['response'])) {
             return $Data['response']['result'];
         } else {
             return false;
         }
     }
 
-    public function FlashLights()
-    {
+    public function FlashLights() {
         $Data['DataID'] = '{5147BF5F-95B4-BA79-CD98-F05D450F79CB}';
 
         $Buffer['Command'] = 'FlashLights';
@@ -129,18 +124,17 @@ class TeslaVehicleControl extends IPSModule
         $Data['Buffer'] = $Buffer;
         $Data = json_encode($Data);
 
-        $Data = json_decode($this->SendDataToParent($Data), true);
-        IPS_LogMessage(__FUNCTION__, print_r($Data, true));
-        if (array_key_exists('result', $Data['response'])) {
-            $this->SendDebug(__FUNCTION__, 'true', 0);
+        $Data = json_decode($this->SendDataToParent($Data),true);
+        IPS_LogMessage(__FUNCTION__,print_r($Data,true));
+        if (array_key_exists('result',$Data['response'])) {
+            $this->SendDebug(__FUNCTION__,'true',0);
             return $Data['response']['result'];
         } else {
             return false;
         }
     }
 
-    public function RemoteStartDrive()
-    {
+    public function RemoteStartDrive() {
         $Data['DataID'] = '{5147BF5F-95B4-BA79-CD98-F05D450F79CB}';
 
         $Buffer['Command'] = 'RemoteStartDrive';
@@ -149,8 +143,8 @@ class TeslaVehicleControl extends IPSModule
         $Data['Buffer'] = $Buffer;
         $Data = json_encode($Data);
 
-        $Data = json_decode($this->SendDataToParent($Data), true);
-        if (array_key_exists('result', $Data['response'])) {
+        $Data = json_decode($this->SendDataToParent($Data),true);
+        if (array_key_exists('result',$Data['response'])) {
             return $Data['response']['result'];
         } else {
             return false;
@@ -158,72 +152,68 @@ class TeslaVehicleControl extends IPSModule
     }
 
     //Speed Limit Functions
-    public function SetSpeedLimit(int $value)
-    {
+    public function SetSpeedLimit(int $value) {
         $Data['DataID'] = '{5147BF5F-95B4-BA79-CD98-F05D450F79CB}';
 
         $Buffer['Command'] = 'SpeedLimitSetLimit';
-        $Buffer['Params'] = array('limit_mph' => $value);
+        $Buffer['Params'] = ['limit_mph' => $value];
 
         $Data['Buffer'] = $Buffer;
         $Data = json_encode($Data);
 
-        $Data = json_decode($this->SendDataToParent($Data), true);
-        if (array_key_exists('result', $Data['response'])) {
+        $Data = json_decode($this->SendDataToParent($Data),true);
+        if (array_key_exists('result',$Data['response'])) {
             return $Data['response']['result'];
         } else {
             return false;
         }
     }
 
-    public function ActivateSpeedLimit(int $value)
-    {
+    public function ActivateSpeedLimit(int $value) {
         $Data['DataID'] = '{5147BF5F-95B4-BA79-CD98-F05D450F79CB}';
 
         $Buffer['Command'] = 'SpeedLimitActivate';
-        $Buffer['Params'] = array('pin' => $value);
+        $Buffer['Params'] = ['pin' => $value];
 
         $Data['Buffer'] = $Buffer;
         $Data = json_encode($Data);
 
-        $Data = json_decode($this->SendDataToParent($Data), true);
-        if (array_key_exists('result', $Data['response'])) {
+        $Data = json_decode($this->SendDataToParent($Data),true);
+        if (array_key_exists('result',$Data['response'])) {
             return $Data['response']['result'];
         } else {
             return false;
         }
     }
 
-    public function DeactivateSpeedLimit(int $value)
-    {
+    public function DeactivateSpeedLimit(int $value) {
         $Data['DataID'] = '{5147BF5F-95B4-BA79-CD98-F05D450F79CB}';
 
         $Buffer['Command'] = 'SpeedLimitDeactivate';
-        $Buffer['Params'] = array('pin' => $value);
+        $Buffer['Params'] = ['pin' => $value];
 
         $Data['Buffer'] = $Buffer;
         $Data = json_encode($Data);
 
-        $Data = json_decode($this->SendDataToParent($Data), true);
-        if (array_key_exists('result', $Data['response'])) {
+        $Data = json_decode($this->SendDataToParent($Data),true);
+        if (array_key_exists('result',$Data['response'])) {
             return $Data['response']['result'];
         } else {
             return false;
         }
     }
 
-    public function ClearPinSpeedLimit(int $value)
-    {
+    public function ClearPinSpeedLimit(int $value) {
         $Data['DataID'] = '{5147BF5F-95B4-BA79-CD98-F05D450F79CB}';
 
         $Buffer['Command'] = 'SpeedLimitClearPin';
-        $Buffer['Params'] = array('pin' => $value);
+        $Buffer['Params'] = ['pin' => $value];
 
         $Data['Buffer'] = $Buffer;
         $Data = json_encode($Data);
 
-        $Data = json_decode($this->SendDataToParent($Data), true);
-        if (array_key_exists('result', $Data['response'])) {
+        $Data = json_decode($this->SendDataToParent($Data),true);
+        if (array_key_exists('result',$Data['response'])) {
             return $Data['response']['result'];
         } else {
             return false;
@@ -231,29 +221,27 @@ class TeslaVehicleControl extends IPSModule
     }
 
     //Valet Mode Function
-    public function SetValetMode(int $pin, bool $value)
-    {
+    public function SetValetMode(int $pin, bool $value) {
         $Data['DataID'] = '{5147BF5F-95B4-BA79-CD98-F05D450F79CB}';
 
         $Buffer['Command'] = 'SetValetMode';
-        $Buffer['Params'] = array(
-            'on'       => $value,
+        $Buffer['Params'] = [
+            'on' => $value,
             'password' => $pin
-        );
+        ];
 
         $Data['Buffer'] = $Buffer;
         $Data = json_encode($Data);
 
-        $Data = json_decode($this->SendDataToParent($Data), true);
-        if (array_key_exists('result', $Data['response'])) {
+        $Data = json_decode($this->SendDataToParent($Data),true);
+        if (array_key_exists('result',$Data['response'])) {
             return $Data['response']['result'];
         } else {
             return false;
         }
     }
 
-    public function ResetValetPin()
-    {
+    public function ResetValetPin() {
         $Data['DataID'] = '{5147BF5F-95B4-BA79-CD98-F05D450F79CB}';
 
         $Buffer['Command'] = 'ResetValetPin';
@@ -262,8 +250,8 @@ class TeslaVehicleControl extends IPSModule
         $Data['Buffer'] = $Buffer;
         $Data = json_encode($Data);
 
-        $Data = json_decode($this->SendDataToParent($Data), true);
-        if (array_key_exists('result', $Data['response'])) {
+        $Data = json_decode($this->SendDataToParent($Data),true);
+        if (array_key_exists('result',$Data['response'])) {
             return $Data['response']['result'];
         } else {
             return false;
@@ -271,18 +259,17 @@ class TeslaVehicleControl extends IPSModule
     }
 
     //Senty Mode Function
-    public function SetSentryMode(bool $value)
-    {
+    public function SetSentryMode(bool $value) {
         $Data['DataID'] = '{5147BF5F-95B4-BA79-CD98-F05D450F79CB}';
 
         $Buffer['Command'] = 'SetSentryMode';
-        $Buffer['Params'] = array('on' => $value);
+        $Buffer['Params'] = ['on' => $value];
 
         $Data['Buffer'] = $Buffer;
         $Data = json_encode($Data);
 
-        $Data = json_decode($this->SendDataToParent($Data), true);
-        if (array_key_exists('result', $Data['response'])) {
+        $Data = json_decode($this->SendDataToParent($Data),true);
+        if (array_key_exists('result',$Data['response'])) {
             return $Data['response']['result'];
         } else {
             return false;
@@ -290,8 +277,7 @@ class TeslaVehicleControl extends IPSModule
     }
 
     //Door Functions
-    public function DoorUnlock()
-    {
+    public function DoorUnlock() {
         $Data['DataID'] = '{5147BF5F-95B4-BA79-CD98-F05D450F79CB}';
 
         $Buffer['Command'] = 'DoorUnlock';
@@ -300,16 +286,15 @@ class TeslaVehicleControl extends IPSModule
         $Data['Buffer'] = $Buffer;
         $Data = json_encode($Data);
 
-        $Data = json_decode($this->SendDataToParent($Data), true);
-        if (array_key_exists('result', $Data['response'])) {
+        $Data = json_decode($this->SendDataToParent($Data),true);
+        if (array_key_exists('result',$Data['response'])) {
             return $Data['response']['result'];
         } else {
             return false;
         }
     }
 
-    public function DoorLock()
-    {
+    public function DoorLock() {
         $Data['DataID'] = '{5147BF5F-95B4-BA79-CD98-F05D450F79CB}';
 
         $Buffer['Command'] = 'DoorLock';
@@ -318,8 +303,8 @@ class TeslaVehicleControl extends IPSModule
         $Data['Buffer'] = $Buffer;
         $Data = json_encode($Data);
 
-        $Data = json_decode($this->SendDataToParent($Data), true);
-        if (array_key_exists('result', $Data['response'])) {
+        $Data = json_decode($this->SendDataToParent($Data),true);
+        if (array_key_exists('result',$Data['response'])) {
             return $Data['response']['result'];
         } else {
             return false;
@@ -328,18 +313,17 @@ class TeslaVehicleControl extends IPSModule
 
     //Frunk/Trunk Functions
     //Value = rear or front
-    public function ActuateTrunk(string $value)
-    {
+    public function ActuateTrunk(string $value) {
         $Data['DataID'] = '{5147BF5F-95B4-BA79-CD98-F05D450F79CB}';
 
         $Buffer['Command'] = 'ActuateTrunk';
-        $Buffer['Params'] = array('which_trunk' => $value);
+        $Buffer['Params'] = ['which_trunk' => $value];
 
         $Data['Buffer'] = $Buffer;
         $Data = json_encode($Data);
 
-        $Data = json_decode($this->SendDataToParent($Data), true);
-        if (array_key_exists('result', $Data['response'])) {
+        $Data = json_decode($this->SendDataToParent($Data),true);
+        if (array_key_exists('result',$Data['response'])) {
             return $Data['response']['result'];
         } else {
             return false;
@@ -348,18 +332,17 @@ class TeslaVehicleControl extends IPSModule
 
     //Functions for Sunroof
     //$value vent or close
-    public function SunRoofControl(string $value)
-    {
+    public function SunRoofControl(string $value) {
         $Data['DataID'] = '{5147BF5F-95B4-BA79-CD98-F05D450F79CB}';
 
         $Buffer['Command'] = 'SunRoofControl';
-        $Buffer['Params'] = array('state' => $value);
+        $Buffer['Params'] = ['state' => $value];
 
         $Data['Buffer'] = $Buffer;
         $Data = json_encode($Data);
 
-        $Data = json_decode($this->SendDataToParent($Data), true);
-        if (array_key_exists('result', $Data['response'])) {
+        $Data = json_decode($this->SendDataToParent($Data),true);
+        if (array_key_exists('result',$Data['response'])) {
             return $Data['response']['result'];
         } else {
             return false;
@@ -367,8 +350,7 @@ class TeslaVehicleControl extends IPSModule
     }
 
     //Functions for Charging
-    public function ChargePortDoorOpen()
-    {
+    public function ChargePortDoorOpen() {
         $Data['DataID'] = '{5147BF5F-95B4-BA79-CD98-F05D450F79CB}';
 
         $Buffer['Command'] = 'ChargePortDoorOpen';
@@ -377,16 +359,15 @@ class TeslaVehicleControl extends IPSModule
         $Data['Buffer'] = $Buffer;
         $Data = json_encode($Data);
 
-        $Data = json_decode($this->SendDataToParent($Data), true);
-        if (array_key_exists('result', $Data['response'])) {
+        $Data = json_decode($this->SendDataToParent($Data),true);
+        if (array_key_exists('result',$Data['response'])) {
             return $Data['response']['result'];
         } else {
             return false;
         }
     }
 
-    public function ChargePortDoorClose()
-    {
+    public function ChargePortDoorClose() {
         $Data['DataID'] = '{5147BF5F-95B4-BA79-CD98-F05D450F79CB}';
 
         $Buffer['Command'] = 'ChargePortDoorClose';
@@ -395,16 +376,15 @@ class TeslaVehicleControl extends IPSModule
         $Data['Buffer'] = $Buffer;
         $Data = json_encode($Data);
 
-        $Data = json_decode($this->SendDataToParent($Data), true);
-        if (array_key_exists('result', $Data['response'])) {
+        $Data = json_decode($this->SendDataToParent($Data),true);
+        if (array_key_exists('result',$Data['response'])) {
             return $Data['response']['result'];
         } else {
             return false;
         }
     }
 
-    public function ChargeStart()
-    {
+    public function ChargeStart() {
         $Data['DataID'] = '{5147BF5F-95B4-BA79-CD98-F05D450F79CB}';
 
         $Buffer['Command'] = 'ChargeStart';
@@ -413,16 +393,15 @@ class TeslaVehicleControl extends IPSModule
         $Data['Buffer'] = $Buffer;
         $Data = json_encode($Data);
 
-        $Data = json_decode($this->SendDataToParent($Data), true);
-        if (array_key_exists('result', $Data['response'])) {
+        $Data = json_decode($this->SendDataToParent($Data),true);
+        if (array_key_exists('result',$Data['response'])) {
             return $Data['response']['result'];
         } else {
             return false;
         }
     }
 
-    public function ChargeStop()
-    {
+    public function ChargeStop() {
         $Data['DataID'] = '{5147BF5F-95B4-BA79-CD98-F05D450F79CB}';
 
         $Buffer['Command'] = 'ChargeStop';
@@ -431,16 +410,15 @@ class TeslaVehicleControl extends IPSModule
         $Data['Buffer'] = $Buffer;
         $Data = json_encode($Data);
 
-        $Data = json_decode($this->SendDataToParent($Data), true);
-        if (array_key_exists('result', $Data['response'])) {
+        $Data = json_decode($this->SendDataToParent($Data),true);
+        if (array_key_exists('result',$Data['response'])) {
             return $Data['response']['result'];
         } else {
             return false;
         }
     }
 
-    public function ChargePortStandard()
-    {
+    public function ChargePortStandard() {
         $Data['DataID'] = '{5147BF5F-95B4-BA79-CD98-F05D450F79CB}';
 
         $Buffer['Command'] = 'ChargeStandard';
@@ -449,16 +427,15 @@ class TeslaVehicleControl extends IPSModule
         $Data['Buffer'] = $Buffer;
         $Data = json_encode($Data);
 
-        $Data = json_decode($this->SendDataToParent($Data), true);
-        if (array_key_exists('result', $Data['response'])) {
+        $Data = json_decode($this->SendDataToParent($Data),true);
+        if (array_key_exists('result',$Data['response'])) {
             return $Data['response']['result'];
         } else {
             return false;
         }
     }
 
-    public function ChargeMaxRange()
-    {
+    public function ChargeMaxRange() {
         $Data['DataID'] = '{5147BF5F-95B4-BA79-CD98-F05D450F79CB}';
 
         $Buffer['Command'] = 'ChargeMaxRange';
@@ -467,26 +444,25 @@ class TeslaVehicleControl extends IPSModule
         $Data['Buffer'] = $Buffer;
         $Data = json_encode($Data);
 
-        $Data = json_decode($this->SendDataToParent($Data), true);
-        if (array_key_exists('result', $Data['response'])) {
+        $Data = json_decode($this->SendDataToParent($Data),true);
+        if (array_key_exists('result',$Data['response'])) {
             return $Data['response']['result'];
         } else {
             return false;
         }
     }
 
-    public function SetChargeLimit(int $value)
-    {
+    public function SetChargeLimit(int $value) {
         $Data['DataID'] = '{5147BF5F-95B4-BA79-CD98-F05D450F79CB}';
 
         $Buffer['Command'] = 'SetChargeLimit';
-        $Buffer['Params'] = array('percent' => $value);
+        $Buffer['Params'] = ['percent' => $value];
 
         $Data['Buffer'] = $Buffer;
         $Data = json_encode($Data);
 
-        $Data = json_decode($this->SendDataToParent($Data), true);
-        if (array_key_exists('result', $Data['response'])) {
+        $Data = json_decode($this->SendDataToParent($Data),true);
+        if (array_key_exists('result',$Data['response'])) {
             return $Data['response']['result'];
         } else {
             return false;
@@ -494,8 +470,7 @@ class TeslaVehicleControl extends IPSModule
     }
 
     //Climate Functions
-    public function AutoConditioningStart()
-    {
+    public function AutoConditioningStart() {
         $Data['DataID'] = '{5147BF5F-95B4-BA79-CD98-F05D450F79CB}';
 
         $Buffer['Command'] = 'AutoConditioningStart';
@@ -504,16 +479,15 @@ class TeslaVehicleControl extends IPSModule
         $Data['Buffer'] = $Buffer;
         $Data = json_encode($Data);
 
-        $Data = json_decode($this->SendDataToParent($Data), true);
-        if (array_key_exists('result', $Data['response'])) {
+        $Data = json_decode($this->SendDataToParent($Data),true);
+        if (array_key_exists('result',$Data['response'])) {
             return $Data['response']['result'];
         } else {
             return false;
         }
     }
 
-    public function AutoConditioningStop()
-    {
+    public function AutoConditioningStop() {
         $Data['DataID'] = '{5147BF5F-95B4-BA79-CD98-F05D450F79CB}';
 
         $Buffer['Command'] = 'AutoConditioningStop';
@@ -522,68 +496,65 @@ class TeslaVehicleControl extends IPSModule
         $Data['Buffer'] = $Buffer;
         $Data = json_encode($Data);
 
-        $Data = json_decode($this->SendDataToParent($Data), true);
-        if (array_key_exists('result', $Data['response'])) {
+        $Data = json_decode($this->SendDataToParent($Data),true);
+        if (array_key_exists('result',$Data['response'])) {
             return $Data['response']['result'];
         } else {
             return false;
         }
     }
 
-    public function SetTemps(int $driver_temp, int $passenger_temp)
-    {
+    public function SetTemps(float $driver_temp, float $passenger_temp) {
         $Data['DataID'] = '{5147BF5F-95B4-BA79-CD98-F05D450F79CB}';
 
         $Buffer['Command'] = 'SetTemps';
-        $Buffer['Params'] = array(
-            'driver_temp'    => $driver_temp,
+        $Buffer['Params'] = [
+            'driver_temp' => $driver_temp,
             'passenger_temp' => $passenger_temp
-        );
+        ];
 
         $Data['Buffer'] = $Buffer;
         $Data = json_encode($Data);
 
-        $Data = json_decode($this->SendDataToParent($Data), true);
-        if (array_key_exists('result', $Data['response'])) {
+        $Data = json_decode($this->SendDataToParent($Data),true);
+        if (array_key_exists('result',$Data['response'])) {
             return $Data['response']['result'];
         } else {
             return false;
         }
     }
 
-    public function RemoteSeatHeaterRequest(int $heater, int $level)
-    {
+    public function RemoteSeatHeaterRequest(int $heater, int $level) {
         $Data['DataID'] = '{5147BF5F-95B4-BA79-CD98-F05D450F79CB}';
 
         $Buffer['Command'] = 'RemoteSeatHeaterRequest';
-        $Buffer['Params'] = array(
+        $Buffer['Params'] = [
             'heater' => $heater,
-            'level'  => $level
-        );
+            'level' => $level
+        ];
 
         $Data['Buffer'] = $Buffer;
         $Data = json_encode($Data);
 
-        $Data = json_decode($this->SendDataToParent($Data), true);
-        if (array_key_exists('result', $Data['response'])) {
+        $Data = json_decode($this->SendDataToParent($Data),true);
+        if (array_key_exists('result',$Data['response'])) {
             return $Data['response']['result'];
         } else {
             return false;
         }
     }
 
-    public function RemoteSteeringWheelHeaterRequest(bool $value)
-    {
+    public function RemoteSteeringWheelHeaterRequest(bool $value) {
         $Data['DataID'] = '{5147BF5F-95B4-BA79-CD98-F05D450F79CB}';
 
         $Buffer['Command'] = 'RemoteSteeringWheelHeaterRequest';
-        $Buffer['Params'] = array('on' => $value);
+        $Buffer['Params'] = ['on' => $value];
 
         $Data['Buffer'] = $Buffer;
         $Data = json_encode($Data);
 
-        $Data = json_decode($this->SendDataToParent($Data), true);
-        if (array_key_exists('result', $Data['response'])) {
+        $Data = json_decode($this->SendDataToParent($Data),true);
+        if (array_key_exists('result',$Data['response'])) {
             return $Data['response']['result'];
         } else {
             return false;
@@ -591,8 +562,7 @@ class TeslaVehicleControl extends IPSModule
     }
 
     //Media Functions
-    public function MediaTogglePlayback()
-    {
+    public function MediaTogglePlayback() {
         $Data['DataID'] = '{5147BF5F-95B4-BA79-CD98-F05D450F79CB}';
 
         $Buffer['Command'] = 'MediaTogglePlayback';
@@ -601,16 +571,15 @@ class TeslaVehicleControl extends IPSModule
         $Data['Buffer'] = $Buffer;
         $Data = json_encode($Data);
 
-        $Data = json_decode($this->SendDataToParent($Data), true);
-        if (array_key_exists('result', $Data['response'])) {
+        $Data = json_decode($this->SendDataToParent($Data),true);
+        if (array_key_exists('result',$Data['response'])) {
             return $Data['response']['result'];
         } else {
             return false;
         }
     }
 
-    public function MediaNextTrack()
-    {
+    public function MediaNextTrack() {
         $Data['DataID'] = '{5147BF5F-95B4-BA79-CD98-F05D450F79CB}';
 
         $Buffer['Command'] = 'MediaNextTrack';
@@ -619,16 +588,15 @@ class TeslaVehicleControl extends IPSModule
         $Data['Buffer'] = $Buffer;
         $Data = json_encode($Data);
 
-        $Data = json_decode($this->SendDataToParent($Data), true);
-        if (array_key_exists('result', $Data['response'])) {
+        $Data = json_decode($this->SendDataToParent($Data),true);
+        if (array_key_exists('result',$Data['response'])) {
             return $Data['response']['result'];
         } else {
             return false;
         }
     }
 
-    public function MediaPrevTrack()
-    {
+    public function MediaPrevTrack() {
         $Data['DataID'] = '{5147BF5F-95B4-BA79-CD98-F05D450F79CB}';
 
         $Buffer['Command'] = 'MediaPrevTrack';
@@ -637,16 +605,15 @@ class TeslaVehicleControl extends IPSModule
         $Data['Buffer'] = $Buffer;
         $Data = json_encode($Data);
 
-        $Data = json_decode($this->SendDataToParent($Data), true);
-        if (array_key_exists('result', $Data['response'])) {
+        $Data = json_decode($this->SendDataToParent($Data),true);
+        if (array_key_exists('result',$Data['response'])) {
             return $Data['response']['result'];
         } else {
             return false;
         }
     }
 
-    public function MediaNextFav()
-    {
+    public function MediaNextFav() {
         $Data['DataID'] = '{5147BF5F-95B4-BA79-CD98-F05D450F79CB}';
 
         $Buffer['Command'] = 'MediaNextFav';
@@ -655,16 +622,15 @@ class TeslaVehicleControl extends IPSModule
         $Data['Buffer'] = $Buffer;
         $Data = json_encode($Data);
 
-        $Data = json_decode($this->SendDataToParent($Data), true);
-        if (array_key_exists('result', $Data['response'])) {
+        $Data = json_decode($this->SendDataToParent($Data),true);
+        if (array_key_exists('result',$Data['response'])) {
             return $Data['response']['result'];
         } else {
             return false;
         }
     }
 
-    public function MediaPrevFav()
-    {
+    public function MediaPrevFav() {
         $Data['DataID'] = '{5147BF5F-95B4-BA79-CD98-F05D450F79CB}';
 
         $Buffer['Command'] = 'MediaPrevFav';
@@ -673,16 +639,15 @@ class TeslaVehicleControl extends IPSModule
         $Data['Buffer'] = $Buffer;
         $Data = json_encode($Data);
 
-        $Data = json_decode($this->SendDataToParent($Data), true);
-        if (array_key_exists('result', $Data['response'])) {
+        $Data = json_decode($this->SendDataToParent($Data),true);
+        if (array_key_exists('result',$Data['response'])) {
             return $Data['response']['result'];
         } else {
             return false;
         }
     }
 
-    public function MediaVolumeUp()
-    {
+    public function MediaVolumeUp() {
         $Data['DataID'] = '{5147BF5F-95B4-BA79-CD98-F05D450F79CB}';
 
         $Buffer['Command'] = 'MediaVolumeUp';
@@ -691,16 +656,15 @@ class TeslaVehicleControl extends IPSModule
         $Data['Buffer'] = $Buffer;
         $Data = json_encode($Data);
 
-        $Data = json_decode($this->SendDataToParent($Data), true);
-        if (array_key_exists('result', $Data['response'])) {
+        $Data = json_decode($this->SendDataToParent($Data),true);
+        if (array_key_exists('result',$Data['response'])) {
             return $Data['response']['result'];
         } else {
             return false;
         }
     }
 
-    public function MediaVolumeDown()
-    {
+    public function MediaVolumeDown() {
         $Data['DataID'] = '{5147BF5F-95B4-BA79-CD98-F05D450F79CB}';
 
         $Buffer['Command'] = 'MediaVolumeDown';
@@ -709,8 +673,8 @@ class TeslaVehicleControl extends IPSModule
         $Data['Buffer'] = $Buffer;
         $Data = json_encode($Data);
 
-        $Data = json_decode($this->SendDataToParent($Data), true);
-        if (array_key_exists('result', $Data['response'])) {
+        $Data = json_decode($this->SendDataToParent($Data),true);
+        if (array_key_exists('result',$Data['response'])) {
             return $Data['response']['result'];
         } else {
             return false;
@@ -731,6 +695,8 @@ class TeslaVehicleControl extends IPSModule
      *
      **/
 
+
+
     public function RequestAction($Ident, $Value)
     {
         $this->SendDebug(__FUNCTION__ . ' Ident', $Ident, 0);
@@ -748,7 +714,7 @@ class TeslaVehicleControl extends IPSModule
                         $this->FlashLights();
                         break;
                     default:
-                        $this->SendDebug(__FUNCTION__ . ' ' . $Ident, 'Undefined Value ' . $Value, 0);
+                        $this->SendDebug(__FUNCTION__.' '.$Ident, 'Undefined Value '. $Value, 0);
                         break;
                 }
                 break;
@@ -764,7 +730,7 @@ class TeslaVehicleControl extends IPSModule
                         $this->DoorLock();
                         break;
                     default:
-                        $this->SendDebug(__FUNCTION__ . ' ' . $Ident, 'Undefined Value ' . $Value, 0);
+                        $this->SendDebug(__FUNCTION__.' '.$Ident, 'Undefined Value '. $Value, 0);
                         break;
                 }
                 break;
@@ -777,7 +743,7 @@ class TeslaVehicleControl extends IPSModule
                         $this->ActuateTrunk('front');
                         break;
                     default:
-                        $this->SendDebug(__FUNCTION__ . ' ' . $Ident, 'Undefined Value ' . $Value, 0);
+                        $this->SendDebug(__FUNCTION__.' '.$Ident, 'Undefined Value '. $Value, 0);
                         break;
                 }
                 break;
@@ -790,7 +756,7 @@ class TeslaVehicleControl extends IPSModule
                         $this->SunRoofControl('close');
                         break;
                     default:
-                        $this->SendDebug(__FUNCTION__ . ' ' . $Ident, 'Undefined Value ' . $Value, 0);
+                        $this->SendDebug(__FUNCTION__.' '.$Ident, 'Undefined Value '. $Value, 0);
                         break;
                 }
                 break;
@@ -803,7 +769,7 @@ class TeslaVehicleControl extends IPSModule
                         $this->ChargePortDoorClose();
                         break;
                     default:
-                        $this->SendDebug(__FUNCTION__ . ' ' . $Ident, 'Undefined Value ' . $Value, 0);
+                        $this->SendDebug(__FUNCTION__.' '.$Ident, 'Undefined Value '. $Value, 0);
                         break;
                 }
                 break;
@@ -822,7 +788,7 @@ class TeslaVehicleControl extends IPSModule
                         $this->ChargeMaxRange();
                         break;
                     default:
-                        $this->SendDebug(__FUNCTION__ . ' ' . $Ident, 'Undefined Value ' . $Value, 0);
+                        $this->SendDebug(__FUNCTION__.' '.$Ident, 'Undefined Value '. $Value, 0);
                         break;
                 }
                 break;
@@ -838,31 +804,31 @@ class TeslaVehicleControl extends IPSModule
                         $this->AutoConditioningStop();
                         break;
                     default:
-                        $this->SendDebug(__FUNCTION__ . ' ' . $Ident, 'Undefined Value ' . $Value, 0);
+                        $this->SendDebug(__FUNCTION__.' '.$Ident, 'Undefined Value '. $Value, 0);
                         break;
                 }
                 break;
             case 'DriverTemp':
-                SetValue(IPS_GetObjectIDByIdent('DriverTemp', $this->InstanceID), floatval($Value));
+                SetValue(IPS_GetObjectIDByIdent('DriverTemp', $this->InstanceID),floatval($Value));
                 break;
             case 'PassengerTemp':
-                SetValue(IPS_GetObjectIDByIdent('PassengerTemp', $this->InstanceID), floatval($Value));
+                SetValue(IPS_GetObjectIDByIdent('PassengerTemp', $this->InstanceID),floatval($Value));
                 break;
             case 'SetTemperature':
                 $driver_temp = floatval(GetValue(IPS_GetObjectIDByIdent('DriverTemp', $this->InstanceID)));
                 $passenger_temp = floatval(GetValue(IPS_GetObjectIDByIdent('PassengerTemp', $this->InstanceID)));
-                $this->SetTemps($driver_temp, $passenger_temp);
+                $this->SetTemps($driver_temp,$passenger_temp);
                 break;
             case 'RemoteSeatHeaterHeater':
-                SetValue(IPS_GetObjectIDByIdent('RemoteSeatHeaterHeater', $this->InstanceID), intval($Value));
+                SetValue(IPS_GetObjectIDByIdent('RemoteSeatHeaterHeater', $this->InstanceID),intval($Value));
                 break;
             case 'RemoteSeatHeaterLevel':
-                SetValue(IPS_GetObjectIDByIdent('RemoteSeatHeaterLevel', $this->InstanceID), intval($Value));
+                SetValue(IPS_GetObjectIDByIdent('RemoteSeatHeaterLevel', $this->InstanceID),intval($Value));
                 break;
             case 'RemoteSeatHeater':
                 $heater = intval(GetValue(IPS_GetObjectIDByIdent('RemoteSeatHeaterHeater', $this->InstanceID)));
                 $level = intval(GetValue(IPS_GetObjectIDByIdent('RemoteSeatHeaterLevel', $this->InstanceID)));
-                $this->RemoteSeatHeaterRequest($heater, $level);
+                $this->RemoteSeatHeaterRequest($heater,$level);
                 break;
             case 'RemoteSteeringWheelHeater':
                 $this->RemoteSteeringWheelHeaterRequest($Value);
@@ -885,7 +851,7 @@ class TeslaVehicleControl extends IPSModule
                         $this->MediaPrevFav();
                         break;
                     default:
-                        $this->SendDebug(__FUNCTION__ . ' ' . $Ident, 'Undefined Value ' . $Value, 0);
+                        $this->SendDebug(__FUNCTION__.' '.$Ident, 'Undefined Value '. $Value, 0);
                         break;
                 }
                 break;
@@ -898,7 +864,7 @@ class TeslaVehicleControl extends IPSModule
                         $this->MediaVolumeDown();
                         break;
                     default:
-                        $this->SendDebug(__FUNCTION__ . ' ' . $Ident, 'Undefined Value ' . $Value, 0);
+                        $this->SendDebug(__FUNCTION__.' '.$Ident, 'Undefined Value '. $Value, 0);
                         break;
                 }
                 break;
@@ -981,7 +947,7 @@ class TeslaVehicleControl extends IPSModule
 
         //Profile for Climate Remote Seat Heater Level
         if (!IPS_VariableProfileExists('Tesla.RemoteSeatHeaterLevel')) {
-            $this->RegisterProfileInteger('Tesla.RemoteSeatHeaterLevel', 'Climate', '', '', 0, 3, 1);
+            $this->RegisterProfileInteger('Tesla.RemoteSeatHeaterLevel','Climate','','', 0,3,1);
         }
         //Profile for Remote Seat Heater
         if (!IPS_VariableProfileExists('Tesla.SetRemoteSeatHeater')) {
@@ -1039,3 +1005,4 @@ class TeslaVehicleControl extends IPSModule
         }
     }
 }
+?>
