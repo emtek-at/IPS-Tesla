@@ -1,4 +1,5 @@
-<?
+<?php
+
 declare(strict_types=1);
 
 class TeslaVehicle extends IPSModule
@@ -54,14 +55,15 @@ class TeslaVehicle extends IPSModule
         $this->RegisterVariableString('vehicle_name', $this->Translate('Vehicle Name'));
     }
 
-    public function ApplyChanges(){
+    public function ApplyChanges()
+    {
 
         //Never delete this line!
         parent::ApplyChanges();
     }
 
-    public function FetchData() {
-
+    public function FetchData()
+    {
         $Data['DataID'] = '{5147BF5F-95B4-BA79-CD98-F05D450F79CB}';
 
         $Buffer['Command'] = 'VehicleState';
@@ -71,34 +73,32 @@ class TeslaVehicle extends IPSModule
 
         $Data = json_encode($Data);
 
-        $Data = json_decode($this->SendDataToParent($Data),true);
+        $Data = json_decode($this->SendDataToParent($Data), true);
 
-        foreach ($Data['response'] as $key => $Value ) {
+        foreach ($Data['response'] as $key => $Value) {
             switch ($key) {
                 case 'speed_limit_mode':
                     $SpeedLimitMode = $Value;
-                    foreach ($SpeedLimitMode as $SpeedLimitKey => $SpeedLimitValue ) {
-                        $this->SetValue('speed_limit_mode_'.$SpeedLimitKey,$SpeedLimitValue);
+                    foreach ($SpeedLimitMode as $SpeedLimitKey => $SpeedLimitValue) {
+                        $this->SetValue('speed_limit_mode_' . $SpeedLimitKey, $SpeedLimitValue);
                     }
                     break;
                 case 'software_update':
                     $SoftwareUpdate = $Value;
-                    foreach ($SoftwareUpdate as $SoftwareUpdateKey => $SoftwareUpdateValue ) {
-                        $this->SetValue('software_update_'.$SoftwareUpdateKey,$SoftwareUpdateValue);
+                    foreach ($SoftwareUpdate as $SoftwareUpdateKey => $SoftwareUpdateValue) {
+                        $this->SetValue('software_update_' . $SoftwareUpdateKey, $SoftwareUpdateValue);
                     }
                     break;
                 case 'media_state':
                     $MediaState = $Value;
-                    foreach ($MediaState as $MediaStateeKey => $MediaStateValue ) {
-                        $this->SetValue('media_state_'.$MediaStateeKey,$MediaStateValue);
+                    foreach ($MediaState as $MediaStateeKey => $MediaStateValue) {
+                        $this->SetValue('media_state_' . $MediaStateeKey, $MediaStateValue);
                     }
                     break;
                 default:
-                    $this->SendDebug(__FUNCTION__. ' '.$key,$key,0);
-                    $this->SetValue($key,$Value);
+                    $this->SendDebug(__FUNCTION__ . ' ' . $key, $key, 0);
+                    $this->SetValue($key, $Value);
             }
         }
     }
 }
-
-?>
