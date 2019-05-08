@@ -6,6 +6,7 @@ require_once __DIR__ . '/../libs/TeslaHelper.php';
 class TeslaDrive extends IPSModule
 {
     use TeslaHelper;
+
     public function Create()
     {
         //Never delete this line!
@@ -13,7 +14,7 @@ class TeslaDrive extends IPSModule
 
         $this->ConnectParent('{0DE3226B-E63E-87DD-7D2F-46C1A17866D9}');
 
-        $this->RegisterPropertyInteger('Interval',60);
+        $this->RegisterPropertyInteger('Interval', 60);
 
         $this->RegisterVariableString('gps_as_of', $this->Translate('GPS as of'));
         $this->RegisterVariableInteger('heading', $this->Translate('Heading'));

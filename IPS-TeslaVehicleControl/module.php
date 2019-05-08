@@ -95,7 +95,7 @@ class TeslaVehicleControl extends IPSModule
 
         $Data = json_decode($this->SendDataToParent($Data), true);
 
-if (!$Data) {
+        if (!$Data) {
             return false;
         }
 
@@ -118,7 +118,7 @@ if (!$Data) {
 
         $Data = json_decode($this->SendDataToParent($Data), true);
 
-if (!$Data) {
+        if (!$Data) {
             return false;
         }
         if (array_key_exists('result', $Data['response'])) {
@@ -140,7 +140,7 @@ if (!$Data) {
 
         $Data = json_decode($this->SendDataToParent($Data), true);
 
-if (!$Data) {
+        if (!$Data) {
             return false;
         }
         IPS_LogMessage(__FUNCTION__, print_r($Data, true));
@@ -164,7 +164,7 @@ if (!$Data) {
 
         $Data = json_decode($this->SendDataToParent($Data), true);
 
-if (!$Data) {
+        if (!$Data) {
             return false;
         }
         if (array_key_exists('result', $Data['response'])) {
@@ -187,7 +187,7 @@ if (!$Data) {
 
         $Data = json_decode($this->SendDataToParent($Data), true);
 
-if (!$Data) {
+        if (!$Data) {
             return false;
         }
         if (array_key_exists('result', $Data['response'])) {
@@ -209,7 +209,7 @@ if (!$Data) {
 
         $Data = json_decode($this->SendDataToParent($Data), true);
 
-if (!$Data) {
+        if (!$Data) {
             return false;
         }
         if (array_key_exists('result', $Data['response'])) {
@@ -231,7 +231,7 @@ if (!$Data) {
 
         $Data = json_decode($this->SendDataToParent($Data), true);
 
-if (!$Data) {
+        if (!$Data) {
             return false;
         }
         if (array_key_exists('result', $Data['response'])) {
@@ -253,7 +253,7 @@ if (!$Data) {
 
         $Data = json_decode($this->SendDataToParent($Data), true);
 
-if (!$Data) {
+        if (!$Data) {
             return false;
         }
         if (array_key_exists('result', $Data['response'])) {
@@ -279,7 +279,7 @@ if (!$Data) {
 
         $Data = json_decode($this->SendDataToParent($Data), true);
 
-if (!$Data) {
+        if (!$Data) {
             return false;
         }
         if (array_key_exists('result', $Data['response'])) {
@@ -301,7 +301,7 @@ if (!$Data) {
 
         $Data = json_decode($this->SendDataToParent($Data), true);
 
-if (!$Data) {
+        if (!$Data) {
             return false;
         }
         if (array_key_exists('result', $Data['response'])) {
@@ -324,7 +324,7 @@ if (!$Data) {
 
         $Data = json_decode($this->SendDataToParent($Data), true);
 
-if (!$Data) {
+        if (!$Data) {
             return false;
         }
         if (array_key_exists('result', $Data['response'])) {
@@ -347,7 +347,7 @@ if (!$Data) {
 
         $Data = json_decode($this->SendDataToParent($Data), true);
 
-if (!$Data) {
+        if (!$Data) {
             return false;
         }
         if (array_key_exists('result', $Data['response'])) {
@@ -369,7 +369,7 @@ if (!$Data) {
 
         $Data = json_decode($this->SendDataToParent($Data), true);
 
-if (!$Data) {
+        if (!$Data) {
             return false;
         }
         if (array_key_exists('result', $Data['response'])) {
@@ -393,7 +393,7 @@ if (!$Data) {
 
         $Data = json_decode($this->SendDataToParent($Data), true);
 
-if (!$Data) {
+        if (!$Data) {
             return false;
         }
         if (array_key_exists('result', $Data['response'])) {
@@ -417,7 +417,7 @@ if (!$Data) {
 
         $Data = json_decode($this->SendDataToParent($Data), true);
 
-if (!$Data) {
+        if (!$Data) {
             return false;
         }
         if (array_key_exists('result', $Data['response'])) {
@@ -440,7 +440,7 @@ if (!$Data) {
 
         $Data = json_decode($this->SendDataToParent($Data), true);
 
-if (!$Data) {
+        if (!$Data) {
             return false;
         }
         if (array_key_exists('result', $Data['response'])) {
@@ -462,7 +462,7 @@ if (!$Data) {
 
         $Data = json_decode($this->SendDataToParent($Data), true);
 
-if (!$Data) {
+        if (!$Data) {
             return false;
         }
         if (array_key_exists('result', $Data['response'])) {
@@ -484,7 +484,7 @@ if (!$Data) {
 
         $Data = json_decode($this->SendDataToParent($Data), true);
 
-if (!$Data) {
+        if (!$Data) {
             return false;
         }
         if (array_key_exists('result', $Data['response'])) {
@@ -506,7 +506,7 @@ if (!$Data) {
 
         $Data = json_decode($this->SendDataToParent($Data), true);
 
-if (!$Data) {
+        if (!$Data) {
             return false;
         }
         if (array_key_exists('result', $Data['response'])) {
@@ -528,7 +528,7 @@ if (!$Data) {
 
         $Data = json_decode($this->SendDataToParent($Data), true);
 
-if (!$Data) {
+        if (!$Data) {
             return false;
         }
         if (array_key_exists('result', $Data['response'])) {
@@ -550,7 +550,7 @@ if (!$Data) {
 
         $Data = json_decode($this->SendDataToParent($Data), true);
 
-if (!$Data) {
+        if (!$Data) {
             return false;
         }
         if (array_key_exists('result', $Data['response'])) {
@@ -572,7 +572,7 @@ if (!$Data) {
 
         $Data = json_decode($this->SendDataToParent($Data), true);
 
-if (!$Data) {
+        if (!$Data) {
             return false;
         }
         if (array_key_exists('result', $Data['response'])) {
@@ -595,7 +595,7 @@ if (!$Data) {
 
         $Data = json_decode($this->SendDataToParent($Data), true);
 
-if (!$Data) {
+        if (!$Data) {
             return false;
         }
         if (array_key_exists('result', $Data['response'])) {
@@ -617,7 +617,7 @@ if (!$Data) {
 
         $Data = json_decode($this->SendDataToParent($Data), true);
 
-if (!$Data) {
+        if (!$Data) {
             return false;
         }
         if (array_key_exists('result', $Data['response'])) {
@@ -642,7 +642,7 @@ if (!$Data) {
 
         $Data = json_decode($this->SendDataToParent($Data), true);
 
-if (!$Data) {
+        if (!$Data) {
             return false;
         }
         if (array_key_exists('result', $Data['response'])) {
@@ -667,7 +667,7 @@ if (!$Data) {
 
         $Data = json_decode($this->SendDataToParent($Data), true);
 
-if (!$Data) {
+        if (!$Data) {
             return false;
         }
         if (array_key_exists('result', $Data['response'])) {
@@ -689,7 +689,7 @@ if (!$Data) {
 
         $Data = json_decode($this->SendDataToParent($Data), true);
 
-if (!$Data) {
+        if (!$Data) {
             return false;
         }
         if (array_key_exists('result', $Data['response'])) {
@@ -712,7 +712,7 @@ if (!$Data) {
 
         $Data = json_decode($this->SendDataToParent($Data), true);
 
-if (!$Data) {
+        if (!$Data) {
             return false;
         }
         if (array_key_exists('result', $Data['response'])) {
@@ -734,7 +734,7 @@ if (!$Data) {
 
         $Data = json_decode($this->SendDataToParent($Data), true);
 
-if (!$Data) {
+        if (!$Data) {
             return false;
         }
         if (array_key_exists('result', $Data['response'])) {
@@ -756,7 +756,7 @@ if (!$Data) {
 
         $Data = json_decode($this->SendDataToParent($Data), true);
 
-if (!$Data) {
+        if (!$Data) {
             return false;
         }
         if (array_key_exists('result', $Data['response'])) {
@@ -778,7 +778,7 @@ if (!$Data) {
 
         $Data = json_decode($this->SendDataToParent($Data), true);
 
-if (!$Data) {
+        if (!$Data) {
             return false;
         }
         if (array_key_exists('result', $Data['response'])) {
@@ -800,7 +800,7 @@ if (!$Data) {
 
         $Data = json_decode($this->SendDataToParent($Data), true);
 
-if (!$Data) {
+        if (!$Data) {
             return false;
         }
         if (array_key_exists('result', $Data['response'])) {
@@ -822,7 +822,7 @@ if (!$Data) {
 
         $Data = json_decode($this->SendDataToParent($Data), true);
 
-if (!$Data) {
+        if (!$Data) {
             return false;
         }
         if (array_key_exists('result', $Data['response'])) {
@@ -844,7 +844,7 @@ if (!$Data) {
 
         $Data = json_decode($this->SendDataToParent($Data), true);
 
-if (!$Data) {
+        if (!$Data) {
             return false;
         }
         if (array_key_exists('result', $Data['response'])) {

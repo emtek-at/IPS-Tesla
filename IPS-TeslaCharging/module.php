@@ -6,6 +6,7 @@ require_once __DIR__ . '/../libs/TeslaHelper.php';
 class TeslaCharging extends IPSModule
 {
     use TeslaHelper;
+
     public function Create()
     {
         //Never delete this line!
@@ -13,7 +14,7 @@ class TeslaCharging extends IPSModule
 
         $this->ConnectParent('{0DE3226B-E63E-87DD-7D2F-46C1A17866D9}');
 
-        $this->RegisterPropertyInteger('Interval',60);
+        $this->RegisterPropertyInteger('Interval', 60);
 
         $this->RegisterVariableBoolean('battery_heater_on', $this->Translate('Battery Heater On'), '~Switch');
         $this->RegisterVariableInteger('battery_level', $this->Translate('Battery Level'));
@@ -88,8 +89,8 @@ class TeslaCharging extends IPSModule
 
         $Data = json_decode($this->SendDataToParent($Data), true);
         if (!$Data) {
-        return false;
-    }
+            return false;
+        }
         foreach ($Data['response'] as $key => $Value) {
             $this->SetValue($key, $Value);
         }
