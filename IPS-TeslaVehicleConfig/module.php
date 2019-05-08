@@ -1,15 +1,19 @@
 <?php
 
 declare(strict_types=1);
+require_once __DIR__ . '/../libs/TeslaHelper.php';
 
 class TeslaVehicleConfig extends IPSModule
 {
+    use TeslaHelper;
     public function Create()
     {
         //Never delete this line!
         parent::Create();
 
         $this->ConnectParent('{0DE3226B-E63E-87DD-7D2F-46C1A17866D9}');
+
+        $this->RegisterPropertyInteger('Interval',60);
 
         $this->RegisterVariableBoolean('can_accept_navigation_requests', $this->Translate('Can Accept Navigation Requests'));
         $this->RegisterVariableBoolean('can_actuate_trunks', $this->Translate('Can Actuate Trunks'));
@@ -35,6 +39,13 @@ class TeslaVehicleConfig extends IPSModule
         $this->RegisterVariableInteger('timestamp', $this->Translate('Timestamp'));
         $this->RegisterVariableString('trim_badging', $this->Translate('Trim Badging'));
         $this->RegisterVariableString('wheel_type', $this->Translate('Wheel Type'));
+
+        $this->RegisterTimer('Tesla_UpdateVehicleConfig', 0, 'Tesla_FetchData($_IPS[\'TARGET\']);');
+    }
+
+    public function Destroy()
+    {
+        $this->UnregisterTimer('Tesla_UpdateVehicleConfig');
     }
 
     public function ApplyChanges()
@@ -55,6 +66,10 @@ class TeslaVehicleConfig extends IPSModule
         $Data = json_encode($Data);
 
         $Data = json_decode($this->SendDataToParent($Data), true);
+
+        if (!$Data) {
+            return false;
+        }
 
         foreach ($Data['response'] as $key => $Value) {
             $this->SendDebug(__FUNCTION__ . ' ' . $key, $key, 0);

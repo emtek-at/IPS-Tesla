@@ -1,15 +1,19 @@
 <?php
 
 declare(strict_types=1);
+require_once __DIR__ . '/../libs/TeslaHelper.php';
 
 class TeslaClimate extends IPSModule
 {
+    use TeslaHelper;
     public function Create()
     {
         //Never delete this line!
         parent::Create();
 
         $this->ConnectParent('{0DE3226B-E63E-87DD-7D2F-46C1A17866D9}');
+
+        $this->RegisterPropertyInteger('Interval',60);
 
         $this->RegisterVariableBoolean('battery_heater', $this->Translate('Battery Heater'));
         $this->RegisterVariableBoolean('battery_heater_no_power', $this->Translate('Battery Heater no Power'));
@@ -41,6 +45,13 @@ class TeslaClimate extends IPSModule
         $this->RegisterVariableBoolean('steering_wheel_heater', $this->Translate('Steering Wheel Heater'));
         $this->RegisterVariableInteger('timestamp', $this->Translate('Timestamp'));
         $this->RegisterVariableBoolean('wiper_blade_heater', $this->Translate('Wiper Blade Heater'));
+
+        $this->RegisterTimer('Tesla_UpdateClimate', 0, 'Tesla_FetchData($_IPS[\'TARGET\']);');
+    }
+
+    public function Destroy()
+    {
+        $this->UnregisterTimer('Tesla_UpdateClimate');
     }
 
     public function ApplyChanges()
@@ -62,7 +73,9 @@ class TeslaClimate extends IPSModule
         $Data = json_encode($Data);
 
         $Data = json_decode($this->SendDataToParent($Data), true);
-
+        if (!$Data) {
+            return false;
+        }
         foreach ($Data['response'] as $key => $Value) {
             $this->SetValue($key, $Value);
         }

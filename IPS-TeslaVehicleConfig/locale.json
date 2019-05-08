@@ -24,7 +24,10 @@
       "Third Row Seats": "Dritte Sitzreihe",
       "Timestamp": "Zeitstempel",
       "Trim Badging": "Typenkennzeichnung",
-      "Wheel Type": "Radtyp"
+      "Wheel Type": "Radtyp",
+      "Update Data": "Daten aktualisieren",
+      "seconds": "Sekunden",
+      "Update Interval": "Updateintervall"
     }
   }
 }

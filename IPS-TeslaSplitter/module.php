@@ -317,19 +317,28 @@ class TeslaSplitter extends IPSModule
         $apiResultJson = json_decode($apiResult, true);
         curl_close($ch);
 
+        if (array_key_exists('error',$apiResultJson)) {
+            $this->SendDebug(__FUNCTION__,$apiResultJson['error'],0);
+            if (fnmatch('*vehicle unavailable*',$apiResultJson['error'])) {
+                IPS_LogMessage('Tesla','Vehicle unavailable');
+                return false;
+            }
+        }
+
         $result = array();
         if ($apiResult === false) {
             $result['errorcode'] = 0;
             $result['errormessage'] = curl_error($ch);
             $this->SendDebug(__FUNCTION__ . ' Error', $result['errorcode'] . ': ' . $result['errormessage'], 0);
+            return false;
         }
         if (!in_array($headerInfo['http_code'], array('200', '201', '204'))) {
             $result['errorcode'] = $headerInfo['http_code'];
             if (isset($apiresult)) {
                 $result['errormessage'] = $apiresult;
             }
-            IPS_LogMessage(__FUNCTION__ . ' Error ', $result['errorcode']);
             $this->SendDebug(__FUNCTION__ . ' Error', $result['errorcode'], 0);
+            return false;
         }
 
         return $apiResultJson ?? $apiResult;

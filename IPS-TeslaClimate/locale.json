@@ -30,7 +30,10 @@
       "Smart Preconditioning" : "Intelligente Vorklimatisierung",
 	  "Steering Wheel Heater" : "Lenkradheizung",
       "Timestamp" : "Zeitstempel",
-      "Wiper Blade Heater" : "Wischerblattheizung"
+      "Wiper Blade Heater" : "Wischerblattheizung",
+      "Update Data": "Daten aktualisieren",
+      "seconds": "Sekunden",
+      "Update Interval": "Updateintervall"
     }
   }
 }

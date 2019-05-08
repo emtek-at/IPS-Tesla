@@ -1,8 +1,11 @@
 {
   "elements":
   [
+    { "type": "Label", "label": "Update Interval" },
+    { "type": "IntervalBox", "name": "Interval", "caption": "seconds" }
   ],
   "actions":
   [
+    { "type": "Button", "caption": "Update Data", "onClick": "Tesla_FetchData($id);" }
   ]
 }

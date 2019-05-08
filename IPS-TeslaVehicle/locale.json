@@ -37,7 +37,10 @@
       "Timestamp" : "Zeitstempel",
       "Valet Mode" : "Parkservice Modus",
       "Valet Pin Needed" : "Parkservice Modus - PIN benötigt",
-      "Vehicle Name" : "Fahrzeugname"
+      "Vehicle Name" : "Fahrzeugname",
+      "Update Data": "Daten aktualisieren",
+      "seconds": "Sekunden",
+      "Update Interval": "Updateintervall"
     }
   }
 }

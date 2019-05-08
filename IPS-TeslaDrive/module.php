@@ -1,15 +1,19 @@
 <?php
 
 declare(strict_types=1);
+require_once __DIR__ . '/../libs/TeslaHelper.php';
 
 class TeslaDrive extends IPSModule
 {
+    use TeslaHelper;
     public function Create()
     {
         //Never delete this line!
         parent::Create();
 
         $this->ConnectParent('{0DE3226B-E63E-87DD-7D2F-46C1A17866D9}');
+
+        $this->RegisterPropertyInteger('Interval',60);
 
         $this->RegisterVariableString('gps_as_of', $this->Translate('GPS as of'));
         $this->RegisterVariableInteger('heading', $this->Translate('Heading'));
@@ -23,6 +27,13 @@ class TeslaDrive extends IPSModule
         $this->RegisterVariableString('shift_state', $this->Translate('Shift State'));
         $this->RegisterVariableString('speed', $this->Translate('Speed'));
         $this->RegisterVariableString('timestamp', $this->Translate('Timestamp'));
+
+        $this->RegisterTimer('Tesla_UpdateDrive', 0, 'Tesla_FetchData($_IPS[\'TARGET\']);');
+    }
+
+    public function Destroy()
+    {
+        $this->UnregisterTimer('Tesla_UpdateDrive');
     }
 
     public function ApplyChanges()
@@ -44,7 +55,9 @@ class TeslaDrive extends IPSModule
         $Data = json_encode($Data);
 
         $Data = json_decode($this->SendDataToParent($Data), true);
-
+        if (!$Data) {
+            return false;
+        }
         foreach ($Data['response'] as $key => $Value) {
             $this->SetValue($key, $Value);
         }

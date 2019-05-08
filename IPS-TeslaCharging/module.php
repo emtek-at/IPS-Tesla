@@ -1,15 +1,19 @@
 <?php
 
 declare(strict_types=1);
+require_once __DIR__ . '/../libs/TeslaHelper.php';
 
 class TeslaCharging extends IPSModule
 {
+    use TeslaHelper;
     public function Create()
     {
         //Never delete this line!
         parent::Create();
 
         $this->ConnectParent('{0DE3226B-E63E-87DD-7D2F-46C1A17866D9}');
+
+        $this->RegisterPropertyInteger('Interval',60);
 
         $this->RegisterVariableBoolean('battery_heater_on', $this->Translate('Battery Heater On'), '~Switch');
         $this->RegisterVariableInteger('battery_level', $this->Translate('Battery Level'));
@@ -53,6 +57,13 @@ class TeslaCharging extends IPSModule
         $this->RegisterVariableBoolean('trip_charging', $this->Translate('Trip Charging'));
         $this->RegisterVariableInteger('usable_battery_level', $this->Translate('Usable Battery Level'));
         $this->RegisterVariableString('user_charge_enable_request', $this->Translate('User Charge Enable Request'));
+
+        $this->RegisterTimer('Tesla_UpdateCharging', 0, 'Tesla_FetchData($_IPS[\'TARGET\']);');
+    }
+
+    public function Destroy()
+    {
+        $this->UnregisterTimer('Tesla_UpdateCharging');
     }
 
     public function ApplyChanges()
@@ -60,6 +71,8 @@ class TeslaCharging extends IPSModule
 
         //Never delete this line!
         parent::ApplyChanges();
+
+        $this->SetTimerInterval('Tesla_UpdateCharging', $this->ReadPropertyInteger('Interval') * 1000);
     }
 
     public function FetchData()
@@ -74,7 +87,9 @@ class TeslaCharging extends IPSModule
         $Data = json_encode($Data);
 
         $Data = json_decode($this->SendDataToParent($Data), true);
-        //$this->SendDebug(__FUNCTION__. ' Result', $result,0);
+        if (!$Data) {
+        return false;
+    }
         foreach ($Data['response'] as $key => $Value) {
             $this->SetValue($key, $Value);
         }

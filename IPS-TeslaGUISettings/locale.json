@@ -6,7 +6,10 @@
       "GUI Distance Units" : "GUI Entfernungseinheit",
       "GUI Range Display" : "GUI Reichweitenanzeige",
       "GUI Temperature Units" : "GUI Temperatureinheit",
-      "timestamp" : "Zeitstempel"
+      "timestamp" : "Zeitstempel",
+      "Update Data": "Daten aktualisieren",
+      "seconds": "Sekunden",
+      "Update Interval": "Updateintervall"
     }
   }
 }

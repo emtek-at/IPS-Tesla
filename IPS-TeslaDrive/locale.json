@@ -12,7 +12,10 @@
       "Power" : "Leistung",
       "Shift State" : "Schaltzustand",
       "Speed" : "Geschwindigkeit",
-      "Timestamp" : "Zeitstempel"
+      "Timestamp" : "Zeitstempel",
+      "Update Data": "Daten aktualisieren",
+      "seconds": "Sekunden",
+      "Update Interval": "Updateintervall"
     }
   }
 }

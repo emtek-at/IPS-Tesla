@@ -42,7 +42,10 @@
       "Timestamp": "Zeitstempel",
       "Trip Charging": "Trip Laden der Batterie",
       "Usable Battery Level": "Batteriekapazität (SOC) nutzbar",
-      "User Charge Enable Request": "Benutzeranforderung zur Ladungsfreigabe"
+      "User Charge Enable Request": "Benutzeranforderung zur Ladungsfreigabe",
+      "Update Data": "Daten aktualisieren",
+      "seconds": "Sekunden",
+      "Update Interval": "Updateintervall"
     }
   }
 }

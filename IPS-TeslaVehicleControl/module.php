@@ -94,6 +94,11 @@ class TeslaVehicleControl extends IPSModule
         $Data = json_encode($Data);
 
         $Data = json_decode($this->SendDataToParent($Data), true);
+
+if (!$Data) {
+            return false;
+        }
+
         if (array_key_exists('result', $Data['response'])) {
             return $Data['response']['result'];
         } else {
@@ -112,6 +117,10 @@ class TeslaVehicleControl extends IPSModule
         $Data = json_encode($Data);
 
         $Data = json_decode($this->SendDataToParent($Data), true);
+
+if (!$Data) {
+            return false;
+        }
         if (array_key_exists('result', $Data['response'])) {
             return $Data['response']['result'];
         } else {
@@ -130,6 +139,10 @@ class TeslaVehicleControl extends IPSModule
         $Data = json_encode($Data);
 
         $Data = json_decode($this->SendDataToParent($Data), true);
+
+if (!$Data) {
+            return false;
+        }
         IPS_LogMessage(__FUNCTION__, print_r($Data, true));
         if (array_key_exists('result', $Data['response'])) {
             $this->SendDebug(__FUNCTION__, 'true', 0);
@@ -150,6 +163,10 @@ class TeslaVehicleControl extends IPSModule
         $Data = json_encode($Data);
 
         $Data = json_decode($this->SendDataToParent($Data), true);
+
+if (!$Data) {
+            return false;
+        }
         if (array_key_exists('result', $Data['response'])) {
             return $Data['response']['result'];
         } else {
@@ -169,6 +186,10 @@ class TeslaVehicleControl extends IPSModule
         $Data = json_encode($Data);
 
         $Data = json_decode($this->SendDataToParent($Data), true);
+
+if (!$Data) {
+            return false;
+        }
         if (array_key_exists('result', $Data['response'])) {
             return $Data['response']['result'];
         } else {
@@ -187,6 +208,10 @@ class TeslaVehicleControl extends IPSModule
         $Data = json_encode($Data);
 
         $Data = json_decode($this->SendDataToParent($Data), true);
+
+if (!$Data) {
+            return false;
+        }
         if (array_key_exists('result', $Data['response'])) {
             return $Data['response']['result'];
         } else {
@@ -205,6 +230,10 @@ class TeslaVehicleControl extends IPSModule
         $Data = json_encode($Data);
 
         $Data = json_decode($this->SendDataToParent($Data), true);
+
+if (!$Data) {
+            return false;
+        }
         if (array_key_exists('result', $Data['response'])) {
             return $Data['response']['result'];
         } else {
@@ -223,6 +252,10 @@ class TeslaVehicleControl extends IPSModule
         $Data = json_encode($Data);
 
         $Data = json_decode($this->SendDataToParent($Data), true);
+
+if (!$Data) {
+            return false;
+        }
         if (array_key_exists('result', $Data['response'])) {
             return $Data['response']['result'];
         } else {
@@ -245,6 +278,10 @@ class TeslaVehicleControl extends IPSModule
         $Data = json_encode($Data);
 
         $Data = json_decode($this->SendDataToParent($Data), true);
+
+if (!$Data) {
+            return false;
+        }
         if (array_key_exists('result', $Data['response'])) {
             return $Data['response']['result'];
         } else {
@@ -263,6 +300,10 @@ class TeslaVehicleControl extends IPSModule
         $Data = json_encode($Data);
 
         $Data = json_decode($this->SendDataToParent($Data), true);
+
+if (!$Data) {
+            return false;
+        }
         if (array_key_exists('result', $Data['response'])) {
             return $Data['response']['result'];
         } else {
@@ -282,6 +323,10 @@ class TeslaVehicleControl extends IPSModule
         $Data = json_encode($Data);
 
         $Data = json_decode($this->SendDataToParent($Data), true);
+
+if (!$Data) {
+            return false;
+        }
         if (array_key_exists('result', $Data['response'])) {
             return $Data['response']['result'];
         } else {
@@ -301,6 +346,10 @@ class TeslaVehicleControl extends IPSModule
         $Data = json_encode($Data);
 
         $Data = json_decode($this->SendDataToParent($Data), true);
+
+if (!$Data) {
+            return false;
+        }
         if (array_key_exists('result', $Data['response'])) {
             return $Data['response']['result'];
         } else {
@@ -319,6 +368,10 @@ class TeslaVehicleControl extends IPSModule
         $Data = json_encode($Data);
 
         $Data = json_decode($this->SendDataToParent($Data), true);
+
+if (!$Data) {
+            return false;
+        }
         if (array_key_exists('result', $Data['response'])) {
             return $Data['response']['result'];
         } else {
@@ -339,6 +392,10 @@ class TeslaVehicleControl extends IPSModule
         $Data = json_encode($Data);
 
         $Data = json_decode($this->SendDataToParent($Data), true);
+
+if (!$Data) {
+            return false;
+        }
         if (array_key_exists('result', $Data['response'])) {
             return $Data['response']['result'];
         } else {
@@ -359,6 +416,10 @@ class TeslaVehicleControl extends IPSModule
         $Data = json_encode($Data);
 
         $Data = json_decode($this->SendDataToParent($Data), true);
+
+if (!$Data) {
+            return false;
+        }
         if (array_key_exists('result', $Data['response'])) {
             return $Data['response']['result'];
         } else {
@@ -378,6 +439,10 @@ class TeslaVehicleControl extends IPSModule
         $Data = json_encode($Data);
 
         $Data = json_decode($this->SendDataToParent($Data), true);
+
+if (!$Data) {
+            return false;
+        }
         if (array_key_exists('result', $Data['response'])) {
             return $Data['response']['result'];
         } else {
@@ -396,6 +461,10 @@ class TeslaVehicleControl extends IPSModule
         $Data = json_encode($Data);
 
         $Data = json_decode($this->SendDataToParent($Data), true);
+
+if (!$Data) {
+            return false;
+        }
         if (array_key_exists('result', $Data['response'])) {
             return $Data['response']['result'];
         } else {
@@ -414,6 +483,10 @@ class TeslaVehicleControl extends IPSModule
         $Data = json_encode($Data);
 
         $Data = json_decode($this->SendDataToParent($Data), true);
+
+if (!$Data) {
+            return false;
+        }
         if (array_key_exists('result', $Data['response'])) {
             return $Data['response']['result'];
         } else {
@@ -432,6 +505,10 @@ class TeslaVehicleControl extends IPSModule
         $Data = json_encode($Data);
 
         $Data = json_decode($this->SendDataToParent($Data), true);
+
+if (!$Data) {
+            return false;
+        }
         if (array_key_exists('result', $Data['response'])) {
             return $Data['response']['result'];
         } else {
@@ -450,6 +527,10 @@ class TeslaVehicleControl extends IPSModule
         $Data = json_encode($Data);
 
         $Data = json_decode($this->SendDataToParent($Data), true);
+
+if (!$Data) {
+            return false;
+        }
         if (array_key_exists('result', $Data['response'])) {
             return $Data['response']['result'];
         } else {
@@ -468,6 +549,10 @@ class TeslaVehicleControl extends IPSModule
         $Data = json_encode($Data);
 
         $Data = json_decode($this->SendDataToParent($Data), true);
+
+if (!$Data) {
+            return false;
+        }
         if (array_key_exists('result', $Data['response'])) {
             return $Data['response']['result'];
         } else {
@@ -486,6 +571,10 @@ class TeslaVehicleControl extends IPSModule
         $Data = json_encode($Data);
 
         $Data = json_decode($this->SendDataToParent($Data), true);
+
+if (!$Data) {
+            return false;
+        }
         if (array_key_exists('result', $Data['response'])) {
             return $Data['response']['result'];
         } else {
@@ -505,6 +594,10 @@ class TeslaVehicleControl extends IPSModule
         $Data = json_encode($Data);
 
         $Data = json_decode($this->SendDataToParent($Data), true);
+
+if (!$Data) {
+            return false;
+        }
         if (array_key_exists('result', $Data['response'])) {
             return $Data['response']['result'];
         } else {
@@ -523,6 +616,10 @@ class TeslaVehicleControl extends IPSModule
         $Data = json_encode($Data);
 
         $Data = json_decode($this->SendDataToParent($Data), true);
+
+if (!$Data) {
+            return false;
+        }
         if (array_key_exists('result', $Data['response'])) {
             return $Data['response']['result'];
         } else {
@@ -544,6 +641,10 @@ class TeslaVehicleControl extends IPSModule
         $Data = json_encode($Data);
 
         $Data = json_decode($this->SendDataToParent($Data), true);
+
+if (!$Data) {
+            return false;
+        }
         if (array_key_exists('result', $Data['response'])) {
             return $Data['response']['result'];
         } else {
@@ -565,6 +666,10 @@ class TeslaVehicleControl extends IPSModule
         $Data = json_encode($Data);
 
         $Data = json_decode($this->SendDataToParent($Data), true);
+
+if (!$Data) {
+            return false;
+        }
         if (array_key_exists('result', $Data['response'])) {
             return $Data['response']['result'];
         } else {
@@ -583,6 +688,10 @@ class TeslaVehicleControl extends IPSModule
         $Data = json_encode($Data);
 
         $Data = json_decode($this->SendDataToParent($Data), true);
+
+if (!$Data) {
+            return false;
+        }
         if (array_key_exists('result', $Data['response'])) {
             return $Data['response']['result'];
         } else {
@@ -602,6 +711,10 @@ class TeslaVehicleControl extends IPSModule
         $Data = json_encode($Data);
 
         $Data = json_decode($this->SendDataToParent($Data), true);
+
+if (!$Data) {
+            return false;
+        }
         if (array_key_exists('result', $Data['response'])) {
             return $Data['response']['result'];
         } else {
@@ -620,6 +733,10 @@ class TeslaVehicleControl extends IPSModule
         $Data = json_encode($Data);
 
         $Data = json_decode($this->SendDataToParent($Data), true);
+
+if (!$Data) {
+            return false;
+        }
         if (array_key_exists('result', $Data['response'])) {
             return $Data['response']['result'];
         } else {
@@ -638,6 +755,10 @@ class TeslaVehicleControl extends IPSModule
         $Data = json_encode($Data);
 
         $Data = json_decode($this->SendDataToParent($Data), true);
+
+if (!$Data) {
+            return false;
+        }
         if (array_key_exists('result', $Data['response'])) {
             return $Data['response']['result'];
         } else {
@@ -656,6 +777,10 @@ class TeslaVehicleControl extends IPSModule
         $Data = json_encode($Data);
 
         $Data = json_decode($this->SendDataToParent($Data), true);
+
+if (!$Data) {
+            return false;
+        }
         if (array_key_exists('result', $Data['response'])) {
             return $Data['response']['result'];
         } else {
@@ -674,6 +799,10 @@ class TeslaVehicleControl extends IPSModule
         $Data = json_encode($Data);
 
         $Data = json_decode($this->SendDataToParent($Data), true);
+
+if (!$Data) {
+            return false;
+        }
         if (array_key_exists('result', $Data['response'])) {
             return $Data['response']['result'];
         } else {
@@ -692,6 +821,10 @@ class TeslaVehicleControl extends IPSModule
         $Data = json_encode($Data);
 
         $Data = json_decode($this->SendDataToParent($Data), true);
+
+if (!$Data) {
+            return false;
+        }
         if (array_key_exists('result', $Data['response'])) {
             return $Data['response']['result'];
         } else {
@@ -710,6 +843,10 @@ class TeslaVehicleControl extends IPSModule
         $Data = json_encode($Data);
 
         $Data = json_decode($this->SendDataToParent($Data), true);
+
+if (!$Data) {
+            return false;
+        }
         if (array_key_exists('result', $Data['response'])) {
             return $Data['response']['result'];
         } else {
