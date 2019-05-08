@@ -6,6 +6,7 @@ require_once __DIR__ . '/../libs/TeslaHelper.php';
 class TeslaVehicleConfig extends IPSModule
 {
     use TeslaHelper;
+
     public function Create()
     {
         //Never delete this line!
@@ -13,7 +14,7 @@ class TeslaVehicleConfig extends IPSModule
 
         $this->ConnectParent('{0DE3226B-E63E-87DD-7D2F-46C1A17866D9}');
 
-        $this->RegisterPropertyInteger('Interval',60);
+        $this->RegisterPropertyInteger('Interval', 60);
 
         $this->RegisterVariableBoolean('can_accept_navigation_requests', $this->Translate('Can Accept Navigation Requests'));
         $this->RegisterVariableBoolean('can_actuate_trunks', $this->Translate('Can Actuate Trunks'));

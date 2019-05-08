@@ -6,6 +6,7 @@ require_once __DIR__ . '/../libs/TeslaHelper.php';
 class TeslaClimate extends IPSModule
 {
     use TeslaHelper;
+
     public function Create()
     {
         //Never delete this line!
@@ -13,7 +14,7 @@ class TeslaClimate extends IPSModule
 
         $this->ConnectParent('{0DE3226B-E63E-87DD-7D2F-46C1A17866D9}');
 
-        $this->RegisterPropertyInteger('Interval',60);
+        $this->RegisterPropertyInteger('Interval', 60);
 
         $this->RegisterVariableBoolean('battery_heater', $this->Translate('Battery Heater'));
         $this->RegisterVariableBoolean('battery_heater_no_power', $this->Translate('Battery Heater no Power'));
