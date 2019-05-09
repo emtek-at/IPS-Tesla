@@ -19,7 +19,7 @@ class TeslaSplitter extends IPSModule
         $this->RegisterPropertyString('Client_Secret', '');
 
         $this->RegisterPropertyInteger('Interval', 5);
-        $this->RegisterPropertyString('Vehicles', 0);
+        $this->RegisterPropertyString('Vehicles', '');
 
         $this->RegisterAttributeString('Token', '');
         $this->RegisterAttributeString('TokenExpires', '');
@@ -86,6 +86,9 @@ class TeslaSplitter extends IPSModule
         $data = json_decode($JSONString);
 
         switch ($data->Buffer->Command) {
+            case 'IsOnline':
+                $result = $this->sendRequest('/vehicles/' . $this->ReadPropertyString('Vehicles'));
+                break;
             case 'ChargingState':
                 $result = $this->sendRequest('/vehicles/' . $this->ReadPropertyString('Vehicles') . '/data_request/charge_state');
                 break;

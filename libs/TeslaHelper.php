@@ -2,6 +2,20 @@
 
 trait TeslaHelper
 {
+    protected function isOnline() {
+        $Data['DataID'] = '{5147BF5F-95B4-BA79-CD98-F05D450F79CB}';
+
+        $Buffer['Command'] = 'IsOnline';
+        $Buffer['Params'] = '';
+
+        $Data['Buffer'] = $Buffer;
+
+        $Data = json_encode($Data);
+
+        $Data = json_decode($this->SendDataToParent($Data), true);
+        return $Data['response']['state'];
+    }
+
     protected function RegisterProfileBoolean($Name, $Icon, $Prefix, $Suffix, $MinValue, $MaxValue, $StepSize)
     {
         if (!IPS_VariableProfileExists($Name)) {

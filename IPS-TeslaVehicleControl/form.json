@@ -1,6 +1,8 @@
 {
   "elements":
   [
+    { "type": "Label", "label": "Update Interval" },
+    { "type": "IntervalBox", "name": "Interval", "caption": "seconds" }
   ],
   "actions":
   [

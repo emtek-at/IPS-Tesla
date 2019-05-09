@@ -14,7 +14,11 @@ class TeslaVehicleControl extends IPSModule
 
         $this->ConnectParent('{0DE3226B-E63E-87DD-7D2F-46C1A17866D9}');
 
+        $this->RegisterPropertyInteger('Interval', 60);
+
         $this->RegisterVariablenProfiles();
+
+        $this->RegisterVariableBoolean('State', $this->Translate('State'), 'Tesla.State', 0);
 
         $this->RegisterVariableInteger('WakeUP', $this->Translate('Wake UP'), 'Tesla.WakeUP', 1);
         $this->EnableAction('WakeUP');
@@ -73,6 +77,13 @@ class TeslaVehicleControl extends IPSModule
 
         $this->RegisterVariableInteger('MediaVolume', $this->Translate('Media Volume'), 'Tesla.MediaVolume', 18);
         $this->EnableAction('MediaVolume');
+
+        $this->RegisterTimer('Tesla_UpdateState', 0, 'Tesla_State($_IPS[\'TARGET\']);');
+    }
+
+    public function Destroy()
+    {
+        $this->UnregisterTimer('Tesla_UpdateState');
     }
 
     public function ApplyChanges()
@@ -80,18 +91,33 @@ class TeslaVehicleControl extends IPSModule
 
         //Never delete this line!
         parent::ApplyChanges();
+
+        $this->SetTimerInterval('Tesla_UpdateState', $this->ReadPropertyInteger('Interval') * 1000);
     }
 
-    public function WakeUP()
-    {
-        $Data['DataID'] = '{5147BF5F-95B4-BA79-CD98-F05D450F79CB}';
+    public function State() {
+        $state = $this->isOnline();
+        switch ($state) {
+            case 'online':
+                SetValue(IPS_GetObjectIDByIdent('State', $this->InstanceID), true);
+                break;
+            case 'asleep':
+                SetValue(IPS_GetObjectIDByIdent('State', $this->InstanceID), false);
+                break;
+            default:
+                $this->SendDebug(__FUNCTION__, $state,0);
+                break;
+        }
+    }
 
-        $Buffer['Command'] = 'WakeUP';
-        $Buffer['Params'] = '';
+    private function sendData(string $command, $params = '') {
+        $Data['DataID'] = '{5147BF5F-95B4-BA79-CD98-F05D450F79CB}';
+        $Buffer['Command'] = $command;
+        $Buffer['Params'] = $params;
 
         $Data['Buffer'] = $Buffer;
-
         $Data = json_encode($Data);
+
 
         $Data = json_decode($this->SendDataToParent($Data), true);
 
@@ -105,753 +131,209 @@ class TeslaVehicleControl extends IPSModule
             return false;
         }
     }
+
+    public function WakeUP() {
+        return $this->sendData('WakeUP');
+    }
+
 
     public function HonkHorn()
     {
-        $Data['DataID'] = '{5147BF5F-95B4-BA79-CD98-F05D450F79CB}';
-
-        $Buffer['Command'] = 'HonkHorn';
-        $Buffer['Params'] = '';
-
-        $Data['Buffer'] = $Buffer;
-        $Data = json_encode($Data);
-
-        $Data = json_decode($this->SendDataToParent($Data), true);
-
-        if (!$Data) {
-            return false;
-        }
-        if (array_key_exists('result', $Data['response'])) {
-            return $Data['response']['result'];
-        } else {
-            return false;
-        }
+        return $this->sendData('HonkHorn');
     }
 
     public function FlashLights()
     {
-        $Data['DataID'] = '{5147BF5F-95B4-BA79-CD98-F05D450F79CB}';
-
-        $Buffer['Command'] = 'FlashLights';
-        $Buffer['Params'] = '';
-
-        $Data['Buffer'] = $Buffer;
-        $Data = json_encode($Data);
-
-        $Data = json_decode($this->SendDataToParent($Data), true);
-
-        if (!$Data) {
-            return false;
-        }
-        IPS_LogMessage(__FUNCTION__, print_r($Data, true));
-        if (array_key_exists('result', $Data['response'])) {
-            $this->SendDebug(__FUNCTION__, 'true', 0);
-            return $Data['response']['result'];
-        } else {
-            return false;
-        }
+        return $this->sendData('FlashLights');
     }
 
     public function RemoteStartDrive()
     {
-        $Data['DataID'] = '{5147BF5F-95B4-BA79-CD98-F05D450F79CB}';
-
-        $Buffer['Command'] = 'RemoteStartDrive';
-        $Buffer['Params'] = '';
-
-        $Data['Buffer'] = $Buffer;
-        $Data = json_encode($Data);
-
-        $Data = json_decode($this->SendDataToParent($Data), true);
-
-        if (!$Data) {
-            return false;
-        }
-        if (array_key_exists('result', $Data['response'])) {
-            return $Data['response']['result'];
-        } else {
-            return false;
-        }
+        return $this->sendData('RemoteStartDrive');
     }
 
     //Speed Limit Functions
     public function SetSpeedLimit(int $value)
     {
-        $Data['DataID'] = '{5147BF5F-95B4-BA79-CD98-F05D450F79CB}';
-
-        $Buffer['Command'] = 'SpeedLimitSetLimit';
-        $Buffer['Params'] = array('limit_mph' => $value);
-
-        $Data['Buffer'] = $Buffer;
-        $Data = json_encode($Data);
-
-        $Data = json_decode($this->SendDataToParent($Data), true);
-
-        if (!$Data) {
-            return false;
-        }
-        if (array_key_exists('result', $Data['response'])) {
-            return $Data['response']['result'];
-        } else {
-            return false;
-        }
+        $params = array('limit_mph' => $value);
+        return $this->sendData('SpeedLimitSetLimit',$params);
     }
 
     public function ActivateSpeedLimit(int $value)
     {
-        $Data['DataID'] = '{5147BF5F-95B4-BA79-CD98-F05D450F79CB}';
-
-        $Buffer['Command'] = 'SpeedLimitActivate';
-        $Buffer['Params'] = array('pin' => $value);
-
-        $Data['Buffer'] = $Buffer;
-        $Data = json_encode($Data);
-
-        $Data = json_decode($this->SendDataToParent($Data), true);
-
-        if (!$Data) {
-            return false;
-        }
-        if (array_key_exists('result', $Data['response'])) {
-            return $Data['response']['result'];
-        } else {
-            return false;
-        }
+        $params = array('pin' => $value);
+        return $this->sendData('SpeedLimitActivate',$params);
     }
 
     public function DeactivateSpeedLimit(int $value)
     {
-        $Data['DataID'] = '{5147BF5F-95B4-BA79-CD98-F05D450F79CB}';
-
-        $Buffer['Command'] = 'SpeedLimitDeactivate';
-        $Buffer['Params'] = array('pin' => $value);
-
-        $Data['Buffer'] = $Buffer;
-        $Data = json_encode($Data);
-
-        $Data = json_decode($this->SendDataToParent($Data), true);
-
-        if (!$Data) {
-            return false;
-        }
-        if (array_key_exists('result', $Data['response'])) {
-            return $Data['response']['result'];
-        } else {
-            return false;
-        }
+        $params = array('pin' => $value);
+        return $this->sendData('SpeedLimitDeactivate',$params);
     }
 
     public function ClearPinSpeedLimit(int $value)
     {
-        $Data['DataID'] = '{5147BF5F-95B4-BA79-CD98-F05D450F79CB}';
+        $params = array('pin' => $value);
+        return $this->sendData('SpeedLimitClearPin',$params);
 
-        $Buffer['Command'] = 'SpeedLimitClearPin';
-        $Buffer['Params'] = array('pin' => $value);
-
-        $Data['Buffer'] = $Buffer;
-        $Data = json_encode($Data);
-
-        $Data = json_decode($this->SendDataToParent($Data), true);
-
-        if (!$Data) {
-            return false;
-        }
-        if (array_key_exists('result', $Data['response'])) {
-            return $Data['response']['result'];
-        } else {
-            return false;
-        }
     }
 
     //Valet Mode Function
     public function SetValetMode(int $pin, bool $value)
     {
-        $Data['DataID'] = '{5147BF5F-95B4-BA79-CD98-F05D450F79CB}';
-
-        $Buffer['Command'] = 'SetValetMode';
-        $Buffer['Params'] = array(
+        $params = array(
             'on'       => $value,
             'password' => $pin
         );
-
-        $Data['Buffer'] = $Buffer;
-        $Data = json_encode($Data);
-
-        $Data = json_decode($this->SendDataToParent($Data), true);
-
-        if (!$Data) {
-            return false;
-        }
-        if (array_key_exists('result', $Data['response'])) {
-            return $Data['response']['result'];
-        } else {
-            return false;
-        }
+        return $this->sendData('SetValetMode',$params);
     }
 
     public function ResetValetPin()
     {
-        $Data['DataID'] = '{5147BF5F-95B4-BA79-CD98-F05D450F79CB}';
-
-        $Buffer['Command'] = 'ResetValetPin';
-        $Buffer['Params'] = '';
-
-        $Data['Buffer'] = $Buffer;
-        $Data = json_encode($Data);
-
-        $Data = json_decode($this->SendDataToParent($Data), true);
-
-        if (!$Data) {
-            return false;
-        }
-        if (array_key_exists('result', $Data['response'])) {
-            return $Data['response']['result'];
-        } else {
-            return false;
-        }
+        return $this->sendData('ResetValetPin');
     }
 
     //Senty Mode Function
     public function SetSentryMode(bool $value)
     {
-        $Data['DataID'] = '{5147BF5F-95B4-BA79-CD98-F05D450F79CB}';
-
-        $Buffer['Command'] = 'SetSentryMode';
-        $Buffer['Params'] = array('on' => $value);
-
-        $Data['Buffer'] = $Buffer;
-        $Data = json_encode($Data);
-
-        $Data = json_decode($this->SendDataToParent($Data), true);
-
-        if (!$Data) {
-            return false;
-        }
-        if (array_key_exists('result', $Data['response'])) {
-            return $Data['response']['result'];
-        } else {
-            return false;
-        }
+        $params = array('on' => $value);
+        return $this->sendData('SetSentryMode',$params);
     }
 
     //Door Functions
     public function DoorUnlock()
     {
-        $Data['DataID'] = '{5147BF5F-95B4-BA79-CD98-F05D450F79CB}';
-
-        $Buffer['Command'] = 'DoorUnlock';
-        $Buffer['Params'] = '';
-
-        $Data['Buffer'] = $Buffer;
-        $Data = json_encode($Data);
-
-        $Data = json_decode($this->SendDataToParent($Data), true);
-
-        if (!$Data) {
-            return false;
-        }
-        if (array_key_exists('result', $Data['response'])) {
-            return $Data['response']['result'];
-        } else {
-            return false;
-        }
+        return $this->sendData('DoorUnlock');
     }
 
     public function DoorLock()
     {
-        $Data['DataID'] = '{5147BF5F-95B4-BA79-CD98-F05D450F79CB}';
-
-        $Buffer['Command'] = 'DoorLock';
-        $Buffer['Params'] = '';
-
-        $Data['Buffer'] = $Buffer;
-        $Data = json_encode($Data);
-
-        $Data = json_decode($this->SendDataToParent($Data), true);
-
-        if (!$Data) {
-            return false;
-        }
-        if (array_key_exists('result', $Data['response'])) {
-            return $Data['response']['result'];
-        } else {
-            return false;
-        }
+        return $this->sendData('DoorLock');
     }
 
     //Frunk/Trunk Functions
     //Value = rear or front
     public function ActuateTrunk(string $value)
     {
-        $Data['DataID'] = '{5147BF5F-95B4-BA79-CD98-F05D450F79CB}';
-
-        $Buffer['Command'] = 'ActuateTrunk';
-        $Buffer['Params'] = array('which_trunk' => $value);
-
-        $Data['Buffer'] = $Buffer;
-        $Data = json_encode($Data);
-
-        $Data = json_decode($this->SendDataToParent($Data), true);
-
-        if (!$Data) {
-            return false;
-        }
-        if (array_key_exists('result', $Data['response'])) {
-            return $Data['response']['result'];
-        } else {
-            return false;
-        }
+        $params = array('which_trunk' => $value);
+        return $this->sendData('ActuateTrunk',$params);
     }
 
     //Functions for Sunroof
     //$value vent or close
     public function SunRoofControl(string $value)
     {
-        $Data['DataID'] = '{5147BF5F-95B4-BA79-CD98-F05D450F79CB}';
 
-        $Buffer['Command'] = 'SunRoofControl';
-        $Buffer['Params'] = array('state' => $value);
-
-        $Data['Buffer'] = $Buffer;
-        $Data = json_encode($Data);
-
-        $Data = json_decode($this->SendDataToParent($Data), true);
-
-        if (!$Data) {
-            return false;
-        }
-        if (array_key_exists('result', $Data['response'])) {
-            return $Data['response']['result'];
-        } else {
-            return false;
-        }
+        $params = array('state' => $value);
+        return $this->sendData('SunRoofControl',$params);
     }
 
     //Functions for Charging
     public function ChargePortDoorOpen()
     {
-        $Data['DataID'] = '{5147BF5F-95B4-BA79-CD98-F05D450F79CB}';
-
-        $Buffer['Command'] = 'ChargePortDoorOpen';
-        $Buffer['Params'] = '';
-
-        $Data['Buffer'] = $Buffer;
-        $Data = json_encode($Data);
-
-        $Data = json_decode($this->SendDataToParent($Data), true);
-
-        if (!$Data) {
-            return false;
-        }
-        if (array_key_exists('result', $Data['response'])) {
-            return $Data['response']['result'];
-        } else {
-            return false;
-        }
+        return $this->sendData('ChargePortDoorOpen');
     }
 
     public function ChargePortDoorClose()
     {
-        $Data['DataID'] = '{5147BF5F-95B4-BA79-CD98-F05D450F79CB}';
-
-        $Buffer['Command'] = 'ChargePortDoorClose';
-        $Buffer['Params'] = '';
-
-        $Data['Buffer'] = $Buffer;
-        $Data = json_encode($Data);
-
-        $Data = json_decode($this->SendDataToParent($Data), true);
-
-        if (!$Data) {
-            return false;
-        }
-        if (array_key_exists('result', $Data['response'])) {
-            return $Data['response']['result'];
-        } else {
-            return false;
-        }
+        return $this->sendData('ChargePortDoorClose');
     }
 
     public function ChargeStart()
     {
-        $Data['DataID'] = '{5147BF5F-95B4-BA79-CD98-F05D450F79CB}';
-
-        $Buffer['Command'] = 'ChargeStart';
-        $Buffer['Params'] = '';
-
-        $Data['Buffer'] = $Buffer;
-        $Data = json_encode($Data);
-
-        $Data = json_decode($this->SendDataToParent($Data), true);
-
-        if (!$Data) {
-            return false;
-        }
-        if (array_key_exists('result', $Data['response'])) {
-            return $Data['response']['result'];
-        } else {
-            return false;
-        }
+        return $this->sendData('ChargeStart');
     }
 
     public function ChargeStop()
     {
-        $Data['DataID'] = '{5147BF5F-95B4-BA79-CD98-F05D450F79CB}';
-
-        $Buffer['Command'] = 'ChargeStop';
-        $Buffer['Params'] = '';
-
-        $Data['Buffer'] = $Buffer;
-        $Data = json_encode($Data);
-
-        $Data = json_decode($this->SendDataToParent($Data), true);
-
-        if (!$Data) {
-            return false;
-        }
-        if (array_key_exists('result', $Data['response'])) {
-            return $Data['response']['result'];
-        } else {
-            return false;
-        }
+        return $this->sendData('ChargeStop');
     }
 
     public function ChargePortStandard()
     {
-        $Data['DataID'] = '{5147BF5F-95B4-BA79-CD98-F05D450F79CB}';
-
-        $Buffer['Command'] = 'ChargeStandard';
-        $Buffer['Params'] = '';
-
-        $Data['Buffer'] = $Buffer;
-        $Data = json_encode($Data);
-
-        $Data = json_decode($this->SendDataToParent($Data), true);
-
-        if (!$Data) {
-            return false;
-        }
-        if (array_key_exists('result', $Data['response'])) {
-            return $Data['response']['result'];
-        } else {
-            return false;
-        }
+        return $this->sendData('ChargeStandard');
     }
 
     public function ChargeMaxRange()
     {
-        $Data['DataID'] = '{5147BF5F-95B4-BA79-CD98-F05D450F79CB}';
-
-        $Buffer['Command'] = 'ChargeMaxRange';
-        $Buffer['Params'] = '';
-
-        $Data['Buffer'] = $Buffer;
-        $Data = json_encode($Data);
-
-        $Data = json_decode($this->SendDataToParent($Data), true);
-
-        if (!$Data) {
-            return false;
-        }
-        if (array_key_exists('result', $Data['response'])) {
-            return $Data['response']['result'];
-        } else {
-            return false;
-        }
+        return $this->sendData('ChargeMaxRange');
     }
 
     public function SetChargeLimit(int $value)
     {
-        $Data['DataID'] = '{5147BF5F-95B4-BA79-CD98-F05D450F79CB}';
-
-        $Buffer['Command'] = 'SetChargeLimit';
-        $Buffer['Params'] = array('percent' => $value);
-
-        $Data['Buffer'] = $Buffer;
-        $Data = json_encode($Data);
-
-        $Data = json_decode($this->SendDataToParent($Data), true);
-
-        if (!$Data) {
-            return false;
-        }
-        if (array_key_exists('result', $Data['response'])) {
-            return $Data['response']['result'];
-        } else {
-            return false;
-        }
+        $params = array('percent' => $value);
+        return $this->sendData('SetChargeLimit',$params);
     }
 
     //Climate Functions
     public function AutoConditioningStart()
     {
-        $Data['DataID'] = '{5147BF5F-95B4-BA79-CD98-F05D450F79CB}';
-
-        $Buffer['Command'] = 'AutoConditioningStart';
-        $Buffer['Params'] = '';
-
-        $Data['Buffer'] = $Buffer;
-        $Data = json_encode($Data);
-
-        $Data = json_decode($this->SendDataToParent($Data), true);
-
-        if (!$Data) {
-            return false;
-        }
-        if (array_key_exists('result', $Data['response'])) {
-            return $Data['response']['result'];
-        } else {
-            return false;
-        }
+        return $this->sendData('AutoConditioningStart');
     }
 
     public function AutoConditioningStop()
     {
-        $Data['DataID'] = '{5147BF5F-95B4-BA79-CD98-F05D450F79CB}';
-
-        $Buffer['Command'] = 'AutoConditioningStop';
-        $Buffer['Params'] = '';
-
-        $Data['Buffer'] = $Buffer;
-        $Data = json_encode($Data);
-
-        $Data = json_decode($this->SendDataToParent($Data), true);
-
-        if (!$Data) {
-            return false;
-        }
-        if (array_key_exists('result', $Data['response'])) {
-            return $Data['response']['result'];
-        } else {
-            return false;
-        }
+        return $this->sendData('AutoConditioningStop');
     }
 
     public function SetTemps(float $driver_temp, float $passenger_temp)
     {
-        $Data['DataID'] = '{5147BF5F-95B4-BA79-CD98-F05D450F79CB}';
-
-        $Buffer['Command'] = 'SetTemps';
-        $Buffer['Params'] = array(
+        $params = array(
             'driver_temp'    => $driver_temp,
             'passenger_temp' => $passenger_temp
         );
-
-        $Data['Buffer'] = $Buffer;
-        $Data = json_encode($Data);
-
-        $Data = json_decode($this->SendDataToParent($Data), true);
-
-        if (!$Data) {
-            return false;
-        }
-        if (array_key_exists('result', $Data['response'])) {
-            return $Data['response']['result'];
-        } else {
-            return false;
-        }
+        return $this->sendData('SetTemps',$params);
     }
 
     public function RemoteSeatHeaterRequest(int $heater, int $level)
     {
-        $Data['DataID'] = '{5147BF5F-95B4-BA79-CD98-F05D450F79CB}';
-
-        $Buffer['Command'] = 'RemoteSeatHeaterRequest';
-        $Buffer['Params'] = array(
+        $params = array(
             'heater' => $heater,
             'level'  => $level
         );
-
-        $Data['Buffer'] = $Buffer;
-        $Data = json_encode($Data);
-
-        $Data = json_decode($this->SendDataToParent($Data), true);
-
-        if (!$Data) {
-            return false;
-        }
-        if (array_key_exists('result', $Data['response'])) {
-            return $Data['response']['result'];
-        } else {
-            return false;
-        }
+        return $this->sendData('SetTemps',$params);
     }
 
     public function RemoteSteeringWheelHeaterRequest(bool $value)
     {
-        $Data['DataID'] = '{5147BF5F-95B4-BA79-CD98-F05D450F79CB}';
-
-        $Buffer['Command'] = 'RemoteSteeringWheelHeaterRequest';
-        $Buffer['Params'] = array('on' => $value);
-
-        $Data['Buffer'] = $Buffer;
-        $Data = json_encode($Data);
-
-        $Data = json_decode($this->SendDataToParent($Data), true);
-
-        if (!$Data) {
-            return false;
-        }
-        if (array_key_exists('result', $Data['response'])) {
-            return $Data['response']['result'];
-        } else {
-            return false;
-        }
+        $params = array('on' => $value);
+        return $this->sendData('RemoteSteeringWheelHeaterRequest',$params);
     }
 
     //Media Functions
     public function MediaTogglePlayback()
     {
-        $Data['DataID'] = '{5147BF5F-95B4-BA79-CD98-F05D450F79CB}';
-
-        $Buffer['Command'] = 'MediaTogglePlayback';
-        $Buffer['Params'] = '';
-
-        $Data['Buffer'] = $Buffer;
-        $Data = json_encode($Data);
-
-        $Data = json_decode($this->SendDataToParent($Data), true);
-
-        if (!$Data) {
-            return false;
-        }
-        if (array_key_exists('result', $Data['response'])) {
-            return $Data['response']['result'];
-        } else {
-            return false;
-        }
+        return $this->sendData('MediaTogglePlayback');
     }
 
     public function MediaNextTrack()
     {
-        $Data['DataID'] = '{5147BF5F-95B4-BA79-CD98-F05D450F79CB}';
-
-        $Buffer['Command'] = 'MediaNextTrack';
-        $Buffer['Params'] = '';
-
-        $Data['Buffer'] = $Buffer;
-        $Data = json_encode($Data);
-
-        $Data = json_decode($this->SendDataToParent($Data), true);
-
-        if (!$Data) {
-            return false;
-        }
-        if (array_key_exists('result', $Data['response'])) {
-            return $Data['response']['result'];
-        } else {
-            return false;
-        }
+        return $this->sendData('MediaNextTrack');
     }
 
     public function MediaPrevTrack()
     {
-        $Data['DataID'] = '{5147BF5F-95B4-BA79-CD98-F05D450F79CB}';
-
-        $Buffer['Command'] = 'MediaPrevTrack';
-        $Buffer['Params'] = '';
-
-        $Data['Buffer'] = $Buffer;
-        $Data = json_encode($Data);
-
-        $Data = json_decode($this->SendDataToParent($Data), true);
-
-        if (!$Data) {
-            return false;
-        }
-        if (array_key_exists('result', $Data['response'])) {
-            return $Data['response']['result'];
-        } else {
-            return false;
-        }
+        return $this->sendData('MediaPrevTrack');
     }
 
     public function MediaNextFav()
     {
-        $Data['DataID'] = '{5147BF5F-95B4-BA79-CD98-F05D450F79CB}';
-
-        $Buffer['Command'] = 'MediaNextFav';
-        $Buffer['Params'] = '';
-
-        $Data['Buffer'] = $Buffer;
-        $Data = json_encode($Data);
-
-        $Data = json_decode($this->SendDataToParent($Data), true);
-
-        if (!$Data) {
-            return false;
-        }
-        if (array_key_exists('result', $Data['response'])) {
-            return $Data['response']['result'];
-        } else {
-            return false;
-        }
+        return $this->sendData('MediaNextFav');
     }
 
     public function MediaPrevFav()
     {
-        $Data['DataID'] = '{5147BF5F-95B4-BA79-CD98-F05D450F79CB}';
-
-        $Buffer['Command'] = 'MediaPrevFav';
-        $Buffer['Params'] = '';
-
-        $Data['Buffer'] = $Buffer;
-        $Data = json_encode($Data);
-
-        $Data = json_decode($this->SendDataToParent($Data), true);
-
-        if (!$Data) {
-            return false;
-        }
-        if (array_key_exists('result', $Data['response'])) {
-            return $Data['response']['result'];
-        } else {
-            return false;
-        }
+        return $this->sendData('MediaPrevFav');
     }
 
     public function MediaVolumeUp()
     {
-        $Data['DataID'] = '{5147BF5F-95B4-BA79-CD98-F05D450F79CB}';
-
-        $Buffer['Command'] = 'MediaVolumeUp';
-        $Buffer['Params'] = '';
-
-        $Data['Buffer'] = $Buffer;
-        $Data = json_encode($Data);
-
-        $Data = json_decode($this->SendDataToParent($Data), true);
-
-        if (!$Data) {
-            return false;
-        }
-        if (array_key_exists('result', $Data['response'])) {
-            return $Data['response']['result'];
-        } else {
-            return false;
-        }
+        return $this->sendData('MediaVolumeUp');
     }
 
     public function MediaVolumeDown()
     {
-        $Data['DataID'] = '{5147BF5F-95B4-BA79-CD98-F05D450F79CB}';
-
-        $Buffer['Command'] = 'MediaVolumeDown';
-        $Buffer['Params'] = '';
-
-        $Data['Buffer'] = $Buffer;
-        $Data = json_encode($Data);
-
-        $Data = json_decode($this->SendDataToParent($Data), true);
-
-        if (!$Data) {
-            return false;
-        }
-        if (array_key_exists('result', $Data['response'])) {
-            return $Data['response']['result'];
-        } else {
-            return false;
-        }
+        return $this->sendData('MediaVolumeDown');
     }
 
     /**TODO Navigation
@@ -1132,6 +614,14 @@ class TeslaVehicleControl extends IPSModule
             $this->RegisterProfileBooleanEx('Tesla.RemoteSteeringWheelHeater', 'Climate', '', '', array(
                 array(false, 'Off',  '', -1),
                 array(true, 'On',  '', -1),
+            ));
+        }
+
+        //Profile for Tesla State
+        if (!IPS_VariableProfileExists('Tesla.State')) {
+            $this->RegisterProfileBooleanEx('Tesla.State', 'Power', '', '', array(
+                array(false, 'Standby',  '', -1),
+                array(true, 'Online',  '', -1),
             ));
         }
 
