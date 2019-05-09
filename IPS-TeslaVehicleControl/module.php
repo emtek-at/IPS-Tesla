@@ -95,7 +95,8 @@ class TeslaVehicleControl extends IPSModule
         $this->SetTimerInterval('Tesla_UpdateState', $this->ReadPropertyInteger('Interval') * 1000);
     }
 
-    public function State() {
+    public function State()
+    {
         $state = $this->isOnline();
         switch ($state) {
             case 'online':
@@ -105,19 +106,19 @@ class TeslaVehicleControl extends IPSModule
                 SetValue(IPS_GetObjectIDByIdent('State', $this->InstanceID), false);
                 break;
             default:
-                $this->SendDebug(__FUNCTION__, $state,0);
+                $this->SendDebug(__FUNCTION__, $state, 0);
                 break;
         }
     }
 
-    private function sendData(string $command, $params = '') {
+    private function sendData(string $command, $params = '')
+    {
         $Data['DataID'] = '{5147BF5F-95B4-BA79-CD98-F05D450F79CB}';
         $Buffer['Command'] = $command;
         $Buffer['Params'] = $params;
 
         $Data['Buffer'] = $Buffer;
         $Data = json_encode($Data);
-
 
         $Data = json_decode($this->SendDataToParent($Data), true);
 
@@ -132,10 +133,10 @@ class TeslaVehicleControl extends IPSModule
         }
     }
 
-    public function WakeUP() {
+    public function WakeUP()
+    {
         return $this->sendData('WakeUP');
     }
-
 
     public function HonkHorn()
     {
@@ -156,26 +157,25 @@ class TeslaVehicleControl extends IPSModule
     public function SetSpeedLimit(int $value)
     {
         $params = array('limit_mph' => $value);
-        return $this->sendData('SpeedLimitSetLimit',$params);
+        return $this->sendData('SpeedLimitSetLimit', $params);
     }
 
     public function ActivateSpeedLimit(int $value)
     {
         $params = array('pin' => $value);
-        return $this->sendData('SpeedLimitActivate',$params);
+        return $this->sendData('SpeedLimitActivate', $params);
     }
 
     public function DeactivateSpeedLimit(int $value)
     {
         $params = array('pin' => $value);
-        return $this->sendData('SpeedLimitDeactivate',$params);
+        return $this->sendData('SpeedLimitDeactivate', $params);
     }
 
     public function ClearPinSpeedLimit(int $value)
     {
         $params = array('pin' => $value);
-        return $this->sendData('SpeedLimitClearPin',$params);
-
+        return $this->sendData('SpeedLimitClearPin', $params);
     }
 
     //Valet Mode Function
@@ -185,7 +185,7 @@ class TeslaVehicleControl extends IPSModule
             'on'       => $value,
             'password' => $pin
         );
-        return $this->sendData('SetValetMode',$params);
+        return $this->sendData('SetValetMode', $params);
     }
 
     public function ResetValetPin()
@@ -197,7 +197,7 @@ class TeslaVehicleControl extends IPSModule
     public function SetSentryMode(bool $value)
     {
         $params = array('on' => $value);
-        return $this->sendData('SetSentryMode',$params);
+        return $this->sendData('SetSentryMode', $params);
     }
 
     //Door Functions
@@ -216,16 +216,15 @@ class TeslaVehicleControl extends IPSModule
     public function ActuateTrunk(string $value)
     {
         $params = array('which_trunk' => $value);
-        return $this->sendData('ActuateTrunk',$params);
+        return $this->sendData('ActuateTrunk', $params);
     }
 
     //Functions for Sunroof
     //$value vent or close
     public function SunRoofControl(string $value)
     {
-
         $params = array('state' => $value);
-        return $this->sendData('SunRoofControl',$params);
+        return $this->sendData('SunRoofControl', $params);
     }
 
     //Functions for Charging
@@ -262,7 +261,7 @@ class TeslaVehicleControl extends IPSModule
     public function SetChargeLimit(int $value)
     {
         $params = array('percent' => $value);
-        return $this->sendData('SetChargeLimit',$params);
+        return $this->sendData('SetChargeLimit', $params);
     }
 
     //Climate Functions
@@ -282,7 +281,7 @@ class TeslaVehicleControl extends IPSModule
             'driver_temp'    => $driver_temp,
             'passenger_temp' => $passenger_temp
         );
-        return $this->sendData('SetTemps',$params);
+        return $this->sendData('SetTemps', $params);
     }
 
     public function RemoteSeatHeaterRequest(int $heater, int $level)
@@ -291,13 +290,13 @@ class TeslaVehicleControl extends IPSModule
             'heater' => $heater,
             'level'  => $level
         );
-        return $this->sendData('SetTemps',$params);
+        return $this->sendData('SetTemps', $params);
     }
 
     public function RemoteSteeringWheelHeaterRequest(bool $value)
     {
         $params = array('on' => $value);
-        return $this->sendData('RemoteSteeringWheelHeaterRequest',$params);
+        return $this->sendData('RemoteSteeringWheelHeaterRequest', $params);
     }
 
     //Media Functions

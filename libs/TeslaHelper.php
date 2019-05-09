@@ -2,7 +2,8 @@
 
 trait TeslaHelper
 {
-    protected function isOnline() {
+    protected function isOnline()
+    {
         $Data['DataID'] = '{5147BF5F-95B4-BA79-CD98-F05D450F79CB}';
 
         $Buffer['Command'] = 'IsOnline';
