@@ -265,12 +265,15 @@ class TeslaSplitter extends IPSModule
 
         $apiResultJson = json_decode($apiResult, true);
         curl_close($ch);
+
+        if (!array_key_exists('access_token',$apiResultJson) || !array_key_exists('expires_in',$apiResultJson) || $apiResultJson === null){
+            $this->SendDebug(__FUNCTION__,'Invalid response while fetching access token!',0);
+            return false;
+        }
+
         $accessToken = $apiResultJson['access_token'];
         $TokenExpires = $apiResultJson['expires_in'];
 
-        if ($apiResultJson === null) {
-            die('Invalid response while fetching access token!');
-        }
         if (!isset($apiResultJson['token_type']) || $apiResultJson['token_type'] != 'bearer') {
             die('Bearer Token expected');
         }
