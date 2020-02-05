@@ -100,7 +100,7 @@ class TeslaVehicle extends IPSModule
                             $this->SetValue('speed_limit_mode_' . $SpeedLimitKey, $SoftwareUpdateValue);
                             ;
                         } else {
-                            $this->SendDebug('Variable not exist', 'Key: speed_limit_mode_' . $key . ' - Value: ' . $Value, 0);
+                            $this->SendDebug('Variable not exist', 'Key: speed_limit_mode_' . $SoftwareUpdateKey . ' - Value: ' . $Value, 0);
                         }
                     }
                     break;
@@ -111,7 +111,7 @@ class TeslaVehicle extends IPSModule
                             $this->SetValue('software_update_' . $SoftwareUpdateKey, $SoftwareUpdateValue);
                             ;
                         } else {
-                            $this->SendDebug('Variable not exist', 'Key: software_update_' . $key . ' - Value: ' . $Value, 0);
+                            $this->SendDebug('Variable not exist', 'Key: software_update_' . $SoftwareUpdateKey . ' - Value: ' . $Value, 0);
                         }
                     }
                     break;
@@ -121,7 +121,7 @@ class TeslaVehicle extends IPSModule
                         if (@$this->GetIDForIdent('media_state_' . $MediaStateeKey) != false) {
                             $this->SetValue('media_state_' . $MediaStateeKey, $MediaStateValue);
                         } else {
-                            $this->SendDebug('Variable not exist', 'Key: media_state_' . $key . ' - Value: ' . $Value, 0);
+                            $this->SendDebug('Variable not exist', 'Key: media_state_' . $SoftwareUpdateKey . ' - Value: ' . $Value, 0);
                         }
                     }
                     break;
