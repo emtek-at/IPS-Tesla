@@ -113,7 +113,12 @@ class TeslaVehicle extends IPSModule
                     break;
                 default:
                     $this->SendDebug(__FUNCTION__ . ' ' . $key, $key, 0);
-                    $this->SetValue($key, $Value);
+                        if (@$this->GetIDForIdent($key) != false) {
+                            $this->SetValue($key, $Value);
+                        } else {
+                            $this->SendDebug('Variable not exist', 'Key: ' . $key . ' - Value: ' . $Value, 0);
+                        }
+                    break;
             }
         }
     }

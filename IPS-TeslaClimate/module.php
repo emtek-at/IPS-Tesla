@@ -17,6 +17,7 @@ class TeslaClimate extends IPSModule
         $this->RegisterPropertyInteger('Interval', 60);
 
         $this->RegisterVariableBoolean('battery_heater', $this->Translate('Battery Heater'));
+        $this->RegisterVariableBoolean('defrost_mode', $this->Translate('Defrost Mode'));
         $this->RegisterVariableBoolean('battery_heater_no_power', $this->Translate('Battery Heater no Power'));
         $this->RegisterVariableString('climate_keeper_mode', $this->Translate('Climate Keeper Mode'));
         $this->RegisterVariableFloat('driver_temp_setting', $this->Translate('Driver Temp Setting'));
@@ -78,7 +79,11 @@ class TeslaClimate extends IPSModule
             return false;
         }
         foreach ($Data['response'] as $key => $Value) {
+            if (@$this->GetIDForIdent($key) != false) {
             $this->SetValue($key, $Value);
+            } else {
+                $this->SendDebug('Variable not exist', 'Key: ' . $key . ' - Value: ' . $Value, 0);
+            }
         }
     }
 }

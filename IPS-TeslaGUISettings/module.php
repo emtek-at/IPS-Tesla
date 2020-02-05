@@ -54,7 +54,11 @@ class TeslaGUISettings extends IPSModule
             return false;
         }
         foreach ($Data['response'] as $key => $Value) {
+            if (@$this->GetIDForIdent($key) != false) {
             $this->SetValue($key, $Value);
+            } else {
+                $this->SendDebug('Variable not exist', 'Key: ' . $key . ' - Value: ' . $Value, 0);
+            }
         }
     }
 }
