@@ -96,19 +96,33 @@ class TeslaVehicle extends IPSModule
                 case 'speed_limit_mode':
                     $SpeedLimitMode = $Value;
                     foreach ($SpeedLimitMode as $SpeedLimitKey => $SpeedLimitValue) {
-                        $this->SetValue('speed_limit_mode_' . $SpeedLimitKey, $SpeedLimitValue);
+                        if (@$this->GetIDForIdent('speed_limit_mode_' . $SpeedLimitKey) != false) {
+                            $this->SetValue('speed_limit_mode_' . $SpeedLimitKey, $SoftwareUpdateValue);
+                            ;
+                        } else {
+                            $this->SendDebug('Variable not exist', 'Key: speed_limit_mode_' . $key . ' - Value: ' . $Value, 0);
+                        }
                     }
                     break;
                 case 'software_update':
                     $SoftwareUpdate = $Value;
                     foreach ($SoftwareUpdate as $SoftwareUpdateKey => $SoftwareUpdateValue) {
-                        $this->SetValue('software_update_' . $SoftwareUpdateKey, $SoftwareUpdateValue);
+                        if (@$this->GetIDForIdent('software_update_' . $SoftwareUpdateKey) != false) {
+                            $this->SetValue('software_update_' . $SoftwareUpdateKey, $SoftwareUpdateValue);
+                            ;
+                        } else {
+                            $this->SendDebug('Variable not exist', 'Key: software_update_' . $key . ' - Value: ' . $Value, 0);
+                        }
                     }
                     break;
                 case 'media_state':
                     $MediaState = $Value;
                     foreach ($MediaState as $MediaStateeKey => $MediaStateValue) {
-                        $this->SetValue('media_state_' . $MediaStateeKey, $MediaStateValue);
+                        if (@$this->GetIDForIdent('media_state_' . $MediaStateeKey) != false) {
+                            $this->SetValue('media_state_' . $MediaStateeKey, $MediaStateValue);
+                        } else {
+                            $this->SendDebug('Variable not exist', 'Key: media_state_' . $key . ' - Value: ' . $Value, 0);
+                        }
                     }
                     break;
                 default:
