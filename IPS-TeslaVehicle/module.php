@@ -97,10 +97,10 @@ class TeslaVehicle extends IPSModule
                     $SpeedLimitMode = $Value;
                     foreach ($SpeedLimitMode as $SpeedLimitKey => $SpeedLimitValue) {
                         if (@$this->GetIDForIdent('speed_limit_mode_' . $SpeedLimitKey) != false) {
-                            $this->SetValue('speed_limit_mode_' . $SpeedLimitKey, $SoftwareUpdateValue);
+                            $this->SetValue('speed_limit_mode_' . $SpeedLimitKey, $SpeedLimitValue);
                             ;
                         } else {
-                            $this->SendDebug('Variable not exist', 'Key: speed_limit_mode_' . $SoftwareUpdateKey . ' - Value: ' . $Value, 0);
+                            $this->SendDebug('Variable not exist', 'Key: speed_limit_mode_' . $SpeedLimitKey . ' - Value: ' . $SpeedLimitValue, 0);
                         }
                     }
                     break;
@@ -111,7 +111,7 @@ class TeslaVehicle extends IPSModule
                             $this->SetValue('software_update_' . $SoftwareUpdateKey, $SoftwareUpdateValue);
                             ;
                         } else {
-                            $this->SendDebug('Variable not exist', 'Key: software_update_' . $SoftwareUpdateKey . ' - Value: ' . $Value, 0);
+                            $this->SendDebug('Variable not exist', 'Key: software_update_' . $SoftwareUpdateKey . ' - Value: ' . $SoftwareUpdateValue, 0);
                         }
                     }
                     break;
@@ -121,7 +121,7 @@ class TeslaVehicle extends IPSModule
                         if (@$this->GetIDForIdent('media_state_' . $MediaStateeKey) != false) {
                             $this->SetValue('media_state_' . $MediaStateeKey, $MediaStateValue);
                         } else {
-                            $this->SendDebug('Variable not exist', 'Key: media_state_' . $SoftwareUpdateKey . ' - Value: ' . $Value, 0);
+                            $this->SendDebug('Variable not exist', 'Key: media_state_' . $MediaStateeKey . ' - Value: ' . $MediaStateValue, 0);
                         }
                     }
                     break;
