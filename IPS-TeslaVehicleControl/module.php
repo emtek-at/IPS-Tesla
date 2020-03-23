@@ -101,9 +101,11 @@ class TeslaVehicleControl extends IPSModule
         switch ($state) {
             case 'online':
                 SetValue(IPS_GetObjectIDByIdent('State', $this->InstanceID), true);
+                return $state;
                 break;
             case 'asleep':
                 SetValue(IPS_GetObjectIDByIdent('State', $this->InstanceID), false);
+                return $state;
                 break;
             default:
                 $this->SendDebug(__FUNCTION__, $state, 0);
