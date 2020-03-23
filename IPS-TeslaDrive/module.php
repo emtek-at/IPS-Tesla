@@ -61,7 +61,7 @@ class TeslaDrive extends IPSModule
         }
         foreach ($Data['response'] as $key => $Value) {
             if (@$this->GetIDForIdent($key) != false) {
-            $this->SetValue($key, $Value);
+                $this->SetValue($key, $Value);
             } else {
                 $this->SendDebug('Variable not exist', 'Key: ' . $key . ' - Value: ' . $Value, 0);
             }

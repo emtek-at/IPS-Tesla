@@ -35,7 +35,7 @@ class TeslaSplitter extends IPSModule
     public function GetConfigurationForm()
     {
         //$Form = json_decode(file_get_contents(__DIR__ . '/form.json'), true);
-        $Form = array();
+        $Form = [];
 
         $Form['elements'][0]['type'] = 'ValidationTextBox';
         $Form['elements'][0]['name'] = 'EMail';
@@ -108,16 +108,16 @@ class TeslaSplitter extends IPSModule
                 $result = $this->sendRequest('/vehicles/' . $this->ReadPropertyString('Vehicles') . '/data_request/vehicle_config');
                 break;
             case 'WakeUP':
-                $result = $this->sendRequest('/vehicles/' . $this->ReadPropertyString('Vehicles') . '/wake_up', array(), 'POST');
+                $result = $this->sendRequest('/vehicles/' . $this->ReadPropertyString('Vehicles') . '/wake_up', [], 'POST');
                 break;
             case 'HonkHorn':
-                $result = $this->sendRequest('/vehicles/' . $this->ReadPropertyString('Vehicles') . '/command/honk_horn', array(), 'POST');
+                $result = $this->sendRequest('/vehicles/' . $this->ReadPropertyString('Vehicles') . '/command/honk_horn', [], 'POST');
                 break;
             case 'FlashLights':
-                $result = $this->sendRequest('/vehicles/' . $this->ReadPropertyString('Vehicles') . '/command/flash_lights', array(), 'POST');
+                $result = $this->sendRequest('/vehicles/' . $this->ReadPropertyString('Vehicles') . '/command/flash_lights', [], 'POST');
                 break;
             case 'RemoteStartDrive':
-                $result = $this->sendRequest('/vehicles/' . $this->ReadPropertyString('Vehicles') . '/command/remote_start_drive?password=' . $this->ReadPropertyString('Password'), array(), 'POST');
+                $result = $this->sendRequest('/vehicles/' . $this->ReadPropertyString('Vehicles') . '/command/remote_start_drive?password=' . $this->ReadPropertyString('Password'), [], 'POST');
                 break;
             case 'SpeedLimitSetLimit':
                 $params = (array) $data->Buffer->Params;
@@ -140,53 +140,53 @@ class TeslaSplitter extends IPSModule
                 $result = $this->sendRequest('/vehicles/' . $this->ReadPropertyString('Vehicles') . '/command/set_valet_mode', $params, 'POST');
                 break;
             case 'ResetValetPin':
-                $result = $this->sendRequest('/vehicles/' . $this->ReadPropertyString('Vehicles') . '/command/reset_valet_pin', array(), 'POST');
+                $result = $this->sendRequest('/vehicles/' . $this->ReadPropertyString('Vehicles') . '/command/reset_valet_pin', [], 'POST');
                 break;
             case 'SetSentryMode':
                 $params = (array) $data->Buffer->Params;
                 $result = $this->sendRequest('/vehicles/' . $this->ReadPropertyString('Vehicles') . '/command/set_sentry_mode', $params, 'POST');
                 break;
             case 'DoorUnlock':
-                $result = $this->sendRequest('/vehicles/' . $this->ReadPropertyString('Vehicles') . '/command/door_unlock', array(), 'POST');
+                $result = $this->sendRequest('/vehicles/' . $this->ReadPropertyString('Vehicles') . '/command/door_unlock', [], 'POST');
                 break;
             case 'DoorLock':
-                $result = $this->sendRequest('/vehicles/' . $this->ReadPropertyString('Vehicles') . '/command/door_lock', array(), 'POST');
+                $result = $this->sendRequest('/vehicles/' . $this->ReadPropertyString('Vehicles') . '/command/door_lock', [], 'POST');
                 break;
             case 'ActuateTrunk':
                 $params = (array) $data->Buffer->Params;
-                $result = $this->sendRequest('/vehicles/' . $this->ReadPropertyString('Vehicles') . '/command/actuate_trunk', array(), 'POST');
+                $result = $this->sendRequest('/vehicles/' . $this->ReadPropertyString('Vehicles') . '/command/actuate_trunk', [], 'POST');
                 break;
             case 'SunRoofControl':
                 $params = (array) $data->Buffer->Params;
                 $result = $this->sendRequest('/vehicles/' . $this->ReadPropertyString('Vehicles') . '/command/sun_roof_control', $params, 'POST');
                 break;
             case 'ChargePortDoorOpen':
-                $result = $this->sendRequest('/vehicles/' . $this->ReadPropertyString('Vehicles') . '/command/charge_port_door_open', array(), 'POST');
+                $result = $this->sendRequest('/vehicles/' . $this->ReadPropertyString('Vehicles') . '/command/charge_port_door_open', [], 'POST');
                 break;
             case 'ChargePortDoorClose':
-                $result = $this->sendRequest('/vehicles/' . $this->ReadPropertyString('Vehicles') . '/command/charge_port_door_close', array(), 'POST');
+                $result = $this->sendRequest('/vehicles/' . $this->ReadPropertyString('Vehicles') . '/command/charge_port_door_close', [], 'POST');
                 break;
             case 'ChargeStart':
-                $result = $this->sendRequest('/vehicles/' . $this->ReadPropertyString('Vehicles') . '/command/charge_start', array(), 'POST');
+                $result = $this->sendRequest('/vehicles/' . $this->ReadPropertyString('Vehicles') . '/command/charge_start', [], 'POST');
                 break;
             case 'ChargeStop':
-                $result = $this->sendRequest('/vehicles/' . $this->ReadPropertyString('Vehicles') . '/command/charge_stop', array(), 'POST');
+                $result = $this->sendRequest('/vehicles/' . $this->ReadPropertyString('Vehicles') . '/command/charge_stop', [], 'POST');
                 break;
             case 'ChargeStandard':
-                $result = $this->sendRequest('/vehicles/' . $this->ReadPropertyString('Vehicles') . '/command/charge_standard', array(), 'POST');
+                $result = $this->sendRequest('/vehicles/' . $this->ReadPropertyString('Vehicles') . '/command/charge_standard', [], 'POST');
                 break;
             case 'ChargeMaxRange':
-                $result = $this->sendRequest('/vehicles/' . $this->ReadPropertyString('Vehicles') . '/command/charge_max_range', array(), 'POST');
+                $result = $this->sendRequest('/vehicles/' . $this->ReadPropertyString('Vehicles') . '/command/charge_max_range', [], 'POST');
                 break;
             case 'SetChargeLimit':
                 $params = (array) $data->Buffer->Params;
                 $result = $this->sendRequest('/vehicles/' . $this->ReadPropertyString('Vehicles') . '/command/set_charge_limit', $params, 'POST');
                 break;
             case 'AutoConditioningStart':
-                $result = $this->sendRequest('/vehicles/' . $this->ReadPropertyString('Vehicles') . '/command/auto_conditioning_start', array(), 'POST');
+                $result = $this->sendRequest('/vehicles/' . $this->ReadPropertyString('Vehicles') . '/command/auto_conditioning_start', [], 'POST');
                 break;
             case 'AutoConditioningStop':
-                $result = $this->sendRequest('/vehicles/' . $this->ReadPropertyString('Vehicles') . '/command/auto_conditioning_stop', array(), 'POST');
+                $result = $this->sendRequest('/vehicles/' . $this->ReadPropertyString('Vehicles') . '/command/auto_conditioning_stop', [], 'POST');
                 break;
             case 'SetTemps':
                 $params = (array) $data->Buffer->Params;
@@ -197,28 +197,28 @@ class TeslaSplitter extends IPSModule
                 $result = $this->sendRequest('/vehicles/' . $this->ReadPropertyString('Vehicles') . '/command/remote_seat_heater_request', $params, 'POST');
                 break;
             case 'RemoteSteeringWheelHeaterRequest':
-                $result = $this->sendRequest('/vehicles/' . $this->ReadPropertyString('Vehicles') . '/command/remote_steering_wheel_heater_request', array(), 'POST');
+                $result = $this->sendRequest('/vehicles/' . $this->ReadPropertyString('Vehicles') . '/command/remote_steering_wheel_heater_request', [], 'POST');
                 break;
             case 'MediaTogglePlayback':
-                $result = $this->sendRequest('/vehicles/' . $this->ReadPropertyString('Vehicles') . '/command/media_toggle_playback', array(), 'POST');
+                $result = $this->sendRequest('/vehicles/' . $this->ReadPropertyString('Vehicles') . '/command/media_toggle_playback', [], 'POST');
                 break;
             case 'MediaNextTrack':
-                $result = $this->sendRequest('/vehicles/' . $this->ReadPropertyString('Vehicles') . '/command/media_next_track', array(), 'POST');
+                $result = $this->sendRequest('/vehicles/' . $this->ReadPropertyString('Vehicles') . '/command/media_next_track', [], 'POST');
                 break;
             case 'MediaPrevTrack':
-                $result = $this->sendRequest('/vehicles/' . $this->ReadPropertyString('Vehicles') . '/command/media_prev_track', array(), 'POST');
+                $result = $this->sendRequest('/vehicles/' . $this->ReadPropertyString('Vehicles') . '/command/media_prev_track', [], 'POST');
                 break;
             case 'MediaNextFav':
-                $result = $this->sendRequest('/vehicles/' . $this->ReadPropertyString('Vehicles') . '/command/media_next_fav', array(), 'POST');
+                $result = $this->sendRequest('/vehicles/' . $this->ReadPropertyString('Vehicles') . '/command/media_next_fav', [], 'POST');
                 break;
             case 'MediaPrevFav':
-                $result = $this->sendRequest('/vehicles/' . $this->ReadPropertyString('Vehicles') . '/command/media_prev_fav', array(), 'POST');
+                $result = $this->sendRequest('/vehicles/' . $this->ReadPropertyString('Vehicles') . '/command/media_prev_fav', [], 'POST');
                 break;
             case 'MediaVolumeUp':
-                $result = $this->sendRequest('/vehicles/' . $this->ReadPropertyString('Vehicles') . '/command/media_volume_up', array(), 'POST');
+                $result = $this->sendRequest('/vehicles/' . $this->ReadPropertyString('Vehicles') . '/command/media_volume_up', [], 'POST');
                 break;
             case 'MediaVolumeDown':
-                $result = $this->sendRequest('/vehicles/' . $this->ReadPropertyString('Vehicles') . '/command/media_volume_down', array(), 'POST');
+                $result = $this->sendRequest('/vehicles/' . $this->ReadPropertyString('Vehicles') . '/command/media_volume_down', [], 'POST');
                 break;
             default:
                 $this->SendDebug(__FUNCTION__, $data->Buffer->Command, 0);
@@ -243,19 +243,19 @@ class TeslaSplitter extends IPSModule
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_TIMEOUT, 30);
         curl_setopt($ch, CURLOPT_POST, true);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+        curl_setopt($ch, CURLOPT_HTTPHEADER, [
             'Content-Type: application/json',
             'Accept: application/json',
             'User-Agent: Mozilla/5.0 (Linux; Android 9.0.0; VS985 4G Build/LRX21Y; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/58.0.3029.83 Mobile Safari/537.36',
             'X-Tesla-User-Agent: TeslaApp/3.4.4-350/fad4a582e/android/9.0.0',
-        ));
-        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode(array(
+        ]);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
             'grant_type'    => 'password',
             'client_id'     => $this->ReadPropertyString('Client_ID'),
             'client_secret' => $this->ReadPropertyString('Client_Secret'),
             'email'         => $this->ReadPropertyString('EMail'),
             'password'      => $this->ReadPropertyString('Password'),
-        )));
+        ]));
 
         $apiResult = curl_exec($ch);
 
@@ -283,7 +283,7 @@ class TeslaSplitter extends IPSModule
         return true;
     }
 
-    private function sendRequest(string $endpoint, array $params = array(), string $method = 'GET')
+    private function sendRequest(string $endpoint, array $params = [], string $method = 'GET')
     {
         $accessToken = $this->ReadAttributeString('Token');
         $tokenExpires = $this->ReadAttributeString('TokenExpires');
@@ -300,19 +300,19 @@ class TeslaSplitter extends IPSModule
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_TIMEOUT, 30);
         curl_setopt($ch, CURLOPT_HEADER, false);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+        curl_setopt($ch, CURLOPT_HTTPHEADER, [
             'Content-Type: application/json',
             'Accept: application/json',
             'User-Agent: Mozilla/5.0 (Linux; Android 9.0.0; VS985 4G Build/LRX21Y; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/58.0.3029.83 Mobile Safari/537.36',
             'X-Tesla-User-Agent: TeslaApp/3.4.4-350/fad4a582e/android/9.0.0',
             'Authorization: Bearer ' . $accessToken,
-        ));
+        ]);
 
         if ($method == 'POST' || $method == 'PUT' || $method == 'DELETE') {
             if ($method == 'POST') {
                 curl_setopt($ch, CURLOPT_POST, true);
             }
-            if (in_array($method, array('PUT', 'DELETE'))) {
+            if (in_array($method, ['PUT', 'DELETE'])) {
                 curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $method);
             }
             curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($params));
@@ -331,14 +331,14 @@ class TeslaSplitter extends IPSModule
             }
         }
 
-        $result = array();
+        $result = [];
         if ($apiResult === false) {
             $result['errorcode'] = 0;
             $result['errormessage'] = curl_error($ch);
             $this->SendDebug(__FUNCTION__ . ' Error', $result['errorcode'] . ': ' . $result['errormessage'], 0);
             return false;
         }
-        if (!in_array($headerInfo['http_code'], array('200', '201', '204'))) {
+        if (!in_array($headerInfo['http_code'], ['200', '201', '204'])) {
             $result['errorcode'] = $headerInfo['http_code'];
             if (isset($apiresult)) {
                 $result['errormessage'] = $apiresult;

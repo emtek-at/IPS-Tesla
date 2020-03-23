@@ -113,28 +113,6 @@ class TeslaVehicleControl extends IPSModule
         }
     }
 
-    private function sendData(string $command, $params = '')
-    {
-        $Data['DataID'] = '{5147BF5F-95B4-BA79-CD98-F05D450F79CB}';
-        $Buffer['Command'] = $command;
-        $Buffer['Params'] = $params;
-
-        $Data['Buffer'] = $Buffer;
-        $Data = json_encode($Data);
-
-        $Data = json_decode($this->SendDataToParent($Data), true);
-
-        if (!$Data) {
-            return false;
-        }
-
-        if (array_key_exists('result', $Data['response'])) {
-            return $Data['response']['result'];
-        } else {
-            return false;
-        }
-    }
-
     public function WakeUP()
     {
         return $this->sendData('WakeUP');
@@ -158,35 +136,35 @@ class TeslaVehicleControl extends IPSModule
     //Speed Limit Functions
     public function SetSpeedLimit(int $value)
     {
-        $params = array('limit_mph' => $value);
+        $params = ['limit_mph' => $value];
         return $this->sendData('SpeedLimitSetLimit', $params);
     }
 
     public function ActivateSpeedLimit(int $value)
     {
-        $params = array('pin' => $value);
+        $params = ['pin' => $value];
         return $this->sendData('SpeedLimitActivate', $params);
     }
 
     public function DeactivateSpeedLimit(int $value)
     {
-        $params = array('pin' => $value);
+        $params = ['pin' => $value];
         return $this->sendData('SpeedLimitDeactivate', $params);
     }
 
     public function ClearPinSpeedLimit(int $value)
     {
-        $params = array('pin' => $value);
+        $params = ['pin' => $value];
         return $this->sendData('SpeedLimitClearPin', $params);
     }
 
     //Valet Mode Function
     public function SetValetMode(int $pin, bool $value)
     {
-        $params = array(
+        $params = [
             'on'       => $value,
             'password' => $pin
-        );
+        ];
         return $this->sendData('SetValetMode', $params);
     }
 
@@ -198,7 +176,7 @@ class TeslaVehicleControl extends IPSModule
     //Senty Mode Function
     public function SetSentryMode(bool $value)
     {
-        $params = array('on' => $value);
+        $params = ['on' => $value];
         return $this->sendData('SetSentryMode', $params);
     }
 
@@ -217,7 +195,7 @@ class TeslaVehicleControl extends IPSModule
     //Value = rear or front
     public function ActuateTrunk(string $value)
     {
-        $params = array('which_trunk' => $value);
+        $params = ['which_trunk' => $value];
         return $this->sendData('ActuateTrunk', $params);
     }
 
@@ -225,7 +203,7 @@ class TeslaVehicleControl extends IPSModule
     //$value vent or close
     public function SunRoofControl(string $value)
     {
-        $params = array('state' => $value);
+        $params = ['state' => $value];
         return $this->sendData('SunRoofControl', $params);
     }
 
@@ -262,7 +240,7 @@ class TeslaVehicleControl extends IPSModule
 
     public function SetChargeLimit(int $value)
     {
-        $params = array('percent' => $value);
+        $params = ['percent' => $value];
         return $this->sendData('SetChargeLimit', $params);
     }
 
@@ -279,25 +257,25 @@ class TeslaVehicleControl extends IPSModule
 
     public function SetTemps(float $driver_temp, float $passenger_temp)
     {
-        $params = array(
+        $params = [
             'driver_temp'    => $driver_temp,
             'passenger_temp' => $passenger_temp
-        );
+        ];
         return $this->sendData('SetTemps', $params);
     }
 
     public function RemoteSeatHeaterRequest(int $heater, int $level)
     {
-        $params = array(
+        $params = [
             'heater' => $heater,
             'level'  => $level
-        );
+        ];
         return $this->sendData('SetTemps', $params);
     }
 
     public function RemoteSteeringWheelHeaterRequest(bool $value)
     {
-        $params = array('on' => $value);
+        $params = ['on' => $value];
         return $this->sendData('RemoteSteeringWheelHeaterRequest', $params);
     }
 
@@ -337,19 +315,19 @@ class TeslaVehicleControl extends IPSModule
         return $this->sendData('MediaVolumeDown');
     }
 
-    /**TODO Navigation
+    /*TODO Navigation
      *
      *
      *
      *
-     **/
+     */
 
-    /**TODO Software Updates
+    /*TODO Software Updates
      *
      *
      *
      *
-     **/
+     */
 
     public function RequestAction($Ident, $Value)
     {
@@ -528,74 +506,96 @@ class TeslaVehicleControl extends IPSModule
         }
     }
 
+    private function sendData(string $command, $params = '')
+    {
+        $Data['DataID'] = '{5147BF5F-95B4-BA79-CD98-F05D450F79CB}';
+        $Buffer['Command'] = $command;
+        $Buffer['Params'] = $params;
+
+        $Data['Buffer'] = $Buffer;
+        $Data = json_encode($Data);
+
+        $Data = json_decode($this->SendDataToParent($Data), true);
+
+        if (!$Data) {
+            return false;
+        }
+
+        if (array_key_exists('result', $Data['response'])) {
+            return $Data['response']['result'];
+        } else {
+            return false;
+        }
+    }
+
     private function RegisterVariablenProfiles()
     {
         //Profile for Alerts
         if (!IPS_VariableProfileExists('Tesla.Alert')) {
-            $Associations = array();
-            $Associations[] = array(1, $this->Translate('Honk Horn'), 'Speaker', 0xFF0000);
-            $Associations[] = array(2, $this->Translate('Flash Lights'), 'Light', 0xFFFF00);
+            $Associations = [];
+            $Associations[] = [1, $this->Translate('Honk Horn'), 'Speaker', 0xFF0000];
+            $Associations[] = [2, $this->Translate('Flash Lights'), 'Light', 0xFFFF00];
             $this->RegisterProfileIntegerEx('Tesla.Alerts', 'Alert', '', '', $Associations);
         }
 
         //Profile for Doors
         if (!IPS_VariableProfileExists('Tesla.Doors')) {
-            $Associations = array();
-            $Associations[] = array(1, $this->Translate('Unlock'), '', 0xFF0000);
-            $Associations[] = array(2, $this->Translate('Lock'), '', 0x7CFC00);
+            $Associations = [];
+            $Associations[] = [1, $this->Translate('Unlock'), '', 0xFF0000];
+            $Associations[] = [2, $this->Translate('Lock'), '', 0x7CFC00];
             $this->RegisterProfileIntegerEx('Tesla.Doors', 'Lock', '', '', $Associations);
         }
 
         //Trunk
         if (!IPS_VariableProfileExists('Tesla.Trunk')) {
-            $Associations = array();
-            $Associations[] = array(1, $this->Translate('Rear'), '', -1);
-            $Associations[] = array(2, $this->Translate('Front'), '', -1);
+            $Associations = [];
+            $Associations[] = [1, $this->Translate('Rear'), '', -1];
+            $Associations[] = [2, $this->Translate('Front'), '', -1];
             $this->RegisterProfileIntegerEx('Tesla.Trunk', 'Information', '', '', $Associations);
         }
 
         //Profile for SunRoof
         if (!IPS_VariableProfileExists('Tesla.SunRoof')) {
-            $Associations = array();
-            $Associations[] = array(1, $this->Translate('Vent'), '', 0xFF0000);
-            $Associations[] = array(2, $this->Translate('Close'), '', 0x7CFC00);
+            $Associations = [];
+            $Associations[] = [1, $this->Translate('Vent'), '', 0xFF0000];
+            $Associations[] = [2, $this->Translate('Close'), '', 0x7CFC00];
             $this->RegisterProfileIntegerEx('Tesla.SunRoof', 'Sun', '', '', $Associations);
         }
 
         //Profile for Charge Port
         if (!IPS_VariableProfileExists('Tesla.ChargePort')) {
-            $Associations = array();
-            $Associations[] = array(1, $this->Translate('Open'), '', 0xFF0000);
-            $Associations[] = array(2, $this->Translate('Close'), '', 0x7CFC00);
+            $Associations = [];
+            $Associations[] = [1, $this->Translate('Open'), '', 0xFF0000];
+            $Associations[] = [2, $this->Translate('Close'), '', 0x7CFC00];
             $this->RegisterProfileIntegerEx('Tesla.ChargePort', 'Lock', '', '', $Associations);
         }
 
         //Profile For Charge Control
         if (!IPS_VariableProfileExists('Tesla.ChargeControl')) {
-            $Associations = array();
-            $Associations[] = array(1, $this->Translate('Start'), '', -1);
-            $Associations[] = array(2, $this->Translate('Stop'), '', -1);
-            $Associations[] = array(3, $this->Translate('Standard'), '', -1);
-            $Associations[] = array(4, $this->Translate('Max Range'), '', -1);
+            $Associations = [];
+            $Associations[] = [1, $this->Translate('Start'), '', -1];
+            $Associations[] = [2, $this->Translate('Stop'), '', -1];
+            $Associations[] = [3, $this->Translate('Standard'), '', -1];
+            $Associations[] = [4, $this->Translate('Max Range'), '', -1];
             $this->RegisterProfileIntegerEx('Tesla.ChargeControl', 'Battery', '', '', $Associations);
         }
 
         //Profile for Climate Auto Conditioning
         if (!IPS_VariableProfileExists('Tesla.ClimateAutoConditioning')) {
-            $Associations = array();
-            $Associations[] = array(1, $this->Translate('Start'), '', -1);
-            $Associations[] = array(2, $this->Translate('Stop'), '', -1);
+            $Associations = [];
+            $Associations[] = [1, $this->Translate('Start'), '', -1];
+            $Associations[] = [2, $this->Translate('Stop'), '', -1];
             $this->RegisterProfileIntegerEx('Tesla.ClimateAutoConditioning', 'Climate', '', '', $Associations);
         }
 
         //Profile for Climate Remote Seat Heater Heater
         if (!IPS_VariableProfileExists('Tesla.RemoteSeatHeaterHeater')) {
-            $Associations = array();
-            $Associations[] = array(1, $this->Translate('Driver'), '', -1);
-            $Associations[] = array(2, $this->Translate('Passenger'), '', -1);
-            $Associations[] = array(3, $this->Translate('Rear left'), '', -1);
-            $Associations[] = array(4, $this->Translate('Rear center'), '', -1);
-            $Associations[] = array(5, $this->Translate('Rear right'), '', -1);
+            $Associations = [];
+            $Associations[] = [1, $this->Translate('Driver'), '', -1];
+            $Associations[] = [2, $this->Translate('Passenger'), '', -1];
+            $Associations[] = [3, $this->Translate('Rear left'), '', -1];
+            $Associations[] = [4, $this->Translate('Rear center'), '', -1];
+            $Associations[] = [5, $this->Translate('Rear right'), '', -1];
             $this->RegisterProfileIntegerEx('Tesla.RemoteSeatHeaterHeater', 'Climate', '', '', $Associations);
         }
 
@@ -605,64 +605,64 @@ class TeslaVehicleControl extends IPSModule
         }
         //Profile for Remote Seat Heater
         if (!IPS_VariableProfileExists('Tesla.SetRemoteSeatHeater')) {
-            $Associations = array();
-            $Associations[] = array(1, $this->Translate('Set Remote Seat Heater'), '', -1);
+            $Associations = [];
+            $Associations[] = [1, $this->Translate('Set Remote Seat Heater'), '', -1];
             $this->RegisterProfileIntegerEx('Tesla.SetRemoteSeatHeater', 'Temperature', '', '', $Associations);
         }
 
         //Profile for Climate Remote Steering Wheel Heater
         if (!IPS_VariableProfileExists('Tesla.RemoteSteeringWheelHeater')) {
-            $this->RegisterProfileBooleanEx('Tesla.RemoteSteeringWheelHeater', 'Climate', '', '', array(
-                array(false, 'Off',  '', -1),
-                array(true, 'On',  '', -1),
-            ));
+            $this->RegisterProfileBooleanEx('Tesla.RemoteSteeringWheelHeater', 'Climate', '', '', [
+                [false, 'Off',  '', -1],
+                [true, 'On',  '', -1],
+            ]);
         }
 
         //Profile for Tesla State
         if (!IPS_VariableProfileExists('Tesla.State')) {
-            $this->RegisterProfileBooleanEx('Tesla.State', 'Power', '', '', array(
-                array(false, 'Standby',  '', -1),
-                array(true, 'Online',  '', -1),
-            ));
+            $this->RegisterProfileBooleanEx('Tesla.State', 'Power', '', '', [
+                [false, 'Standby',  '', -1],
+                [true, 'Online',  '', -1],
+            ]);
         }
 
         //Profile for Media Playback
         if (!IPS_VariableProfileExists('Tesla.MediaPlayControl')) {
-            $Associations = array();
-            $Associations[] = array(1, $this->Translate('Toggle Playback'), '', -1);
-            $Associations[] = array(2, $this->Translate('Next Track'), '', -1);
-            $Associations[] = array(3, $this->Translate('Prev Track'), '', -1);
-            $Associations[] = array(4, $this->Translate('Next Favorite'), '', -1);
-            $Associations[] = array(5, $this->Translate('Prev Favorite'), '', -1);
+            $Associations = [];
+            $Associations[] = [1, $this->Translate('Toggle Playback'), '', -1];
+            $Associations[] = [2, $this->Translate('Next Track'), '', -1];
+            $Associations[] = [3, $this->Translate('Prev Track'), '', -1];
+            $Associations[] = [4, $this->Translate('Next Favorite'), '', -1];
+            $Associations[] = [5, $this->Translate('Prev Favorite'), '', -1];
             $this->RegisterProfileIntegerEx('Tesla.MediaPlayControl', 'Music', '', '', $Associations);
         }
 
         //Profile for Media Volume
         if (!IPS_VariableProfileExists('Tesla.MediaVolume')) {
-            $Associations = array();
-            $Associations[] = array(1, $this->Translate('Up'), '', -1);
-            $Associations[] = array(2, $this->Translate('Down'), '', -1);
+            $Associations = [];
+            $Associations[] = [1, $this->Translate('Up'), '', -1];
+            $Associations[] = [2, $this->Translate('Down'), '', -1];
             $this->RegisterProfileIntegerEx('Tesla.MediaVolume', 'Speaker', '', '', $Associations);
         }
 
         //Profile for Set Temperature
         if (!IPS_VariableProfileExists('Tesla.SetTemperature')) {
-            $Associations = array();
-            $Associations[] = array(1, $this->Translate('Set Temperature'), '', -1);
+            $Associations = [];
+            $Associations[] = [1, $this->Translate('Set Temperature'), '', -1];
             $this->RegisterProfileIntegerEx('Tesla.SetTemperature', 'Temperature', '', '', $Associations);
         }
 
         //Profile for WakeUP
         if (!IPS_VariableProfileExists('Tesla.WakeUP')) {
-            $Associations = array();
-            $Associations[] = array(1, $this->Translate('WakeUP'), '', -1);
+            $Associations = [];
+            $Associations[] = [1, $this->Translate('WakeUP'), '', -1];
             $this->RegisterProfileIntegerEx('Tesla.WakeUP', 'Clock', '', '', $Associations);
         }
 
         //Profile for Remote Start Drive
         if (!IPS_VariableProfileExists('Tesla.RemoteStartDrive')) {
-            $Associations = array();
-            $Associations[] = array(1, $this->Translate('Remote Start'), '', -1);
+            $Associations = [];
+            $Associations[] = [1, $this->Translate('Remote Start'), '', -1];
             $this->RegisterProfileIntegerEx('Tesla.RemoteStartDrive', 'Key', '', '', $Associations);
         }
     }

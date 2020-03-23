@@ -98,7 +98,6 @@ class TeslaVehicle extends IPSModule
                     foreach ($SpeedLimitMode as $SpeedLimitKey => $SpeedLimitValue) {
                         if (@$this->GetIDForIdent('speed_limit_mode_' . $SpeedLimitKey) != false) {
                             $this->SetValue('speed_limit_mode_' . $SpeedLimitKey, $SpeedLimitValue);
-                            ;
                         } else {
                             $this->SendDebug('Variable not exist', 'Key: speed_limit_mode_' . $SpeedLimitKey . ' - Value: ' . $SpeedLimitValue, 0);
                         }
@@ -109,7 +108,6 @@ class TeslaVehicle extends IPSModule
                     foreach ($SoftwareUpdate as $SoftwareUpdateKey => $SoftwareUpdateValue) {
                         if (@$this->GetIDForIdent('software_update_' . $SoftwareUpdateKey) != false) {
                             $this->SetValue('software_update_' . $SoftwareUpdateKey, $SoftwareUpdateValue);
-                            ;
                         } else {
                             $this->SendDebug('Variable not exist', 'Key: software_update_' . $SoftwareUpdateKey . ' - Value: ' . $SoftwareUpdateValue, 0);
                         }
