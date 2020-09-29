@@ -154,7 +154,7 @@ class TeslaSplitter extends IPSModule
                 break;
             case 'ActuateTrunk':
                 $params = (array) $data->Buffer->Params;
-                $result = $this->sendRequest('/vehicles/' . $this->ReadPropertyString('Vehicles') . '/command/actuate_trunk', [], 'POST');
+                $result = $this->sendRequest('/vehicles/' . $this->ReadPropertyString('Vehicles') . '/command/actuate_trunk', $params, 'POST');
                 break;
             case 'SunRoofControl':
                 $params = (array) $data->Buffer->Params;
