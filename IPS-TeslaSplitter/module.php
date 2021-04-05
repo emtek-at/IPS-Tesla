@@ -1,11 +1,16 @@
 <?php
 
-declare(strict_types=1);
+//declare(strict_types=1);
 
 class TeslaSplitter extends IPSModule
 {
+    //private $base_url = 'https://owner-api.teslamotors.com/api/1';
+    //private $token_url = 'https://owner-api.teslamotors.com/oauth/token';
+
     private $base_url = 'https://owner-api.teslamotors.com/api/1';
     private $token_url = 'https://owner-api.teslamotors.com/oauth/token';
+    private $token_UrlNew = 'https://auth.tesla.com/oauth2/v3/token';
+    private $accessUrl = 'https://auth.tesla.com/oauth2/v3/authorize';
 
     public function Create()
     {
@@ -23,6 +28,8 @@ class TeslaSplitter extends IPSModule
 
         $this->RegisterAttributeString('Token', '');
         $this->RegisterAttributeString('TokenExpires', '');
+
+        $this->SetBuffer('Cookies', '{}');
     }
 
     public function ApplyChanges()
@@ -228,59 +235,175 @@ class TeslaSplitter extends IPSModule
         return json_encode($result);
     }
 
-    private function getVehicles()
+    public function base64url_encode($data)
     {
-        $result = $this->sendRequest('/vehicles');
-        return $result;
+        return rtrim(strtr(base64_encode($data), '+/', '-_'), '=');
     }
 
-    private function FetchAccessToken()
+    public function FetchAccessToken()
     {
-        $this->SendDebug('FetchAccessToken', '', 0);
+
+       /*###Step 0: Get ClientID & ClientSecret
+
+                $ch = curl_init();
+                curl_setopt($ch, CURLOPT_URL, 'https://pastebin.com/raw/pS7Z6yyP');
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                $result = curl_exec($ch);
+                curl_close($ch);
+                $api = explode(PHP_EOL,$result);
+                $id=explode('=',$api[0]);
+                $secret=explode('=',$api[1]);
+                $this->setClientId(trim($id[1]));
+                $this->setClientSecret(trim($secret[1]));
+        */
+        ###Step 1: Obtain the login page
+
+        $code_verifier = substr(hash('sha512', strval(mt_rand())), 0, 86);
+        $state = $this->base64url_encode(substr(hash('sha256', strval(mt_rand())), 0, 12));
+        $code_challenge = $this->base64url_encode($code_verifier);
+
+        $data = [
+            'client_id'             => 'ownerapi',
+            'code_challenge'        => $code_challenge,
+            'code_challenge_method' => 'S256',
+            'redirect_uri'          => 'https://auth.tesla.com/void/callback',
+            'response_type'         => 'code',
+            'scope'                 => 'openid email offline_access',
+            'state'                 => $state,
+        ];
+
+        $GetUrl = $this->accessUrl . '?' . http_build_query($data);
 
         $ch = curl_init();
+        curl_setopt($ch, CURLOPT_USERAGENT, 'Symcon/' . IPS_GetKernelVersion());
+        curl_setopt($ch, CURLOPT_URL, $GetUrl);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+        curl_setopt($ch, CURLOPT_HEADER, 1);
+        $apiResult = curl_exec($ch);
+        $header_len = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
+        $header = substr($apiResult, 0, $header_len);
+        $this->grabCookies($header);
+        curl_close($ch);
+
+        $body = substr($apiResult, $header_len);
+
+        $dom = new DomDocument();
+        @$dom->loadHTML($body);
+        $child_elements = $dom->getElementsByTagName('input'); //DOMNodeList
+        foreach ($child_elements as $h2) {
+            $hiddeninputs[$h2->getAttribute('name')] = $h2->getAttribute('value');
+        }
+
+        #echo '<pre>';print_r($headers);echo '<pre/>';
+        #echo '<pre>';print_r($hiddeninputs);echo '<pre/><p>';
+        #print $cookie;exit;
+
+        ###Step 2: Obtain an authorization code
+
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_USERAGENT, 'Symcon/' . IPS_GetKernelVersion());
+        curl_setopt($ch, CURLOPT_URL, $GetUrl);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+        curl_setopt($ch, CURLOPT_HEADER, 1);
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_COOKIE, $this->getCookies()['tesla']);
+        curl_setopt($ch, CURLOPT_ENCODING, 'deflate');
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+
+        curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/x-www-form-urlencoded']);
+        $postData = [
+            '_csrf'          => $hiddeninputs['_csrf'],
+            '_phase'         => $hiddeninputs['_phase'],
+            '_process'       => $hiddeninputs['_process'],
+            'transaction_id' => $hiddeninputs['transaction_id'],
+            'cancel'         => $hiddeninputs['cancel'],
+            'identity'       => $this->ReadPropertyString('EMail'),
+            'credential'     => $this->ReadPropertyString('Password')
+        ];
+        curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($postData));
+        $apiResult = curl_exec($ch);
+        $header_len = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
+        $header = substr($apiResult, 0, $header_len);
+        $this->grabCookies($header);
+        curl_close($ch);
+        $codePart = explode('https://auth.tesla.com/void/callback?code=', $apiResult);
+        $code = explode('&', $codePart[1])[0];
+        //print 'CODE'.$code;exit;
+
+        ###Step 3: Exchange authorization code for bearer token
+
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_USERAGENT, 'Symcon/' . IPS_GetKernelVersion());
+        curl_setopt($ch, CURLOPT_URL, $this->token_UrlNew);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_COOKIE, $this->getCookies()['tesla']);
+        curl_setopt($ch, CURLOPT_ENCODING, 'deflate');
+        curl_setopt($ch, CURLOPT_HTTPHEADER, [
+            'Content-Type: application/json',
+            'Accept: application/json'
+        ]);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
+            'grant_type'    => 'authorization_code',
+            'client_id'     => 'ownerapi',
+            'code'          => $code,
+            'code_verifier' => $code_verifier,
+            'redirect_uri'  => 'https://auth.tesla.com/void/callback'
+        ]));
+
+        $apiResult = curl_exec($ch);
+        $header_len = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
+        $header = substr($apiResult, 0, $header_len);
+        $this->grabCookies($header);
+        curl_close($ch);
+        $apiResultJson = json_decode($apiResult, true);
+        #print_r($apiResultJson);exit;
+
+        $BearerToken = $apiResultJson['access_token'];
+        $RefreshToken = $apiResultJson['refresh_token'];
+
+        ###Step 4: Exchange bearer token for access token
+
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_USERAGENT, 'Symcon/' . IPS_GetKernelVersion());
         curl_setopt($ch, CURLOPT_URL, $this->token_url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_TIMEOUT, 30);
         curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_COOKIE, $this->getCookies()['tesla']);
+        curl_setopt($ch, CURLOPT_ENCODING, 'deflate');
         curl_setopt($ch, CURLOPT_HTTPHEADER, [
+            'Authorization: Bearer ' . $BearerToken,
             'Content-Type: application/json',
-            'Accept: application/json',
-            'User-Agent: Mozilla/5.0 (Linux; Android 9.0.0; VS985 4G Build/LRX21Y; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/58.0.3029.83 Mobile Safari/537.36',
-            'X-Tesla-User-Agent: TeslaApp/3.4.4-350/fad4a582e/android/9.0.0',
+            'Accept: application/json'
         ]);
         curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
-            'grant_type'    => 'password',
+            'grant_type'    => 'urn:ietf:params:oauth:grant-type:jwt-bearer',
             'client_id'     => $this->ReadPropertyString('Client_ID'),
             'client_secret' => $this->ReadPropertyString('Client_Secret'),
-            'email'         => $this->ReadPropertyString('EMail'),
-            'password'      => $this->ReadPropertyString('Password'),
         ]));
 
         $apiResult = curl_exec($ch);
-
-        if ($apiResult === false) {
-            die('Curl-Fehler: ' . curl_error($ch));
-        }
-
-        $apiResultJson = json_decode($apiResult, true);
         curl_close($ch);
 
-        if (!array_key_exists('access_token', $apiResultJson) || !array_key_exists('expires_in', $apiResultJson) || $apiResultJson === null) {
-            $this->SendDebug(__FUNCTION__, 'Invalid response while fetching access token!', 0);
-            return false;
-        }
+        $apiResultJson = json_decode($apiResult, true);
+        $apiResultJson['refresh_token'] = $RefreshToken;
+        #print_r($apiResultJson);exit;
 
-        $accessToken = $apiResultJson['access_token'];
-        $TokenExpires = $apiResultJson['expires_in'];
+        $this->WriteAttributeString('Token', $apiResultJson['access_token']);
+        //$this->accessToken = $apiResultJson['access_token'];
 
-        if (!isset($apiResultJson['token_type']) || $apiResultJson['token_type'] != 'bearer') {
-            die('Bearer Token expected');
-        }
-
-        $this->WriteAttributeString('Token', $accessToken);
-        $this->WriteAttributeString('TokenExpires', $TokenExpires);
         return true;
+    }
+
+    private function getVehicles()
+    {
+        $result = $this->sendRequest('/vehicles');
+        return $result;
     }
 
     private function sendRequest(string $endpoint, array $params = [], string $method = 'GET')
@@ -348,5 +471,59 @@ class TeslaSplitter extends IPSModule
         }
 
         return $apiResultJson ?? $apiResult;
+    }
+
+    private function getCookies()
+    {
+        return json_decode($this->GetBuffer('Cookies'), true);
+        //return $this->cookies;
+    }
+
+    /**
+     * @param array $cookies
+     */
+    private function setCookies(array $cookies): void
+    {
+        $this->SetBuffer('Cookies', json_encode($cookies));
+        //$this->cookies = $cookies;
+    }
+
+    /**
+     * This function make sure, that we always have the up-to-date cookie from tesla
+     *
+     * @param string $header
+     */
+    private function grabCookies(string $header)
+    {
+        $headers = [];
+        $output = rtrim($header);
+        $data = explode("\n", $output);
+        $headers['status'] = $data[0];
+        array_shift($data);
+        IPS_LogMessage('data', print_r($data, true));
+        $cookies = [];
+        foreach ($data as $part) {
+            $middle = explode(':', $part, 2);
+            if (!isset($middle[1])) {
+                $middle[1] = null;
+            }
+            $headers[trim($middle[0])] = trim($middle[1]);
+
+            if (strtolower(trim($middle[0])) === 'set-cookie') {
+                $cookies[] = trim($middle[1]);
+            }
+        }
+
+        if (!empty($cookies)) {
+            $knownCookies = $this->getCookies();
+
+            foreach ($cookies as $cookie) {
+                $key = substr($cookie, 0, 5);
+
+                $knownCookies[$key] = $cookie;
+            }
+
+            $this->setCookies($knownCookies);
+        }
     }
 }
