@@ -279,17 +279,23 @@ class TeslaSplitter extends IPSModule
         $GetUrl = $this->accessUrl . '?' . http_build_query($data);
 
         $ch = curl_init();
-        curl_setopt($ch, CURLOPT_USERAGENT, 'Symcon/' . IPS_GetKernelVersion());
+        curl_setopt($ch, CURLOPT_USERAGENT, 'Symcon/5.6');// . IPS_GetKernelVersion());
         curl_setopt($ch, CURLOPT_URL, $GetUrl);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_TIMEOUT, 30);
         curl_setopt($ch, CURLOPT_HEADER, 1);
+        curl_setopt($ch, CURLINFO_HEADER_OUT, 1);
+
+        
         $apiResult = curl_exec($ch);
+        $HederOut = curl_getinfo($ch, CURLINFO_HEADER_OUT);
         $header_len = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
         $header = substr($apiResult, 0, $header_len);
         $this->grabCookies($header);
         curl_close($ch);
-
+        IPS_LogMessage('Setp 1 URL', $GetUrl);
+        IPS_LogMessage('Setp 1 Result', $apiResult);
+        IPS_LogMessage('Setp 1 HederOut', $HederOut);
         $body = substr($apiResult, $header_len);
 
         $dom = new DomDocument();
@@ -306,7 +312,7 @@ class TeslaSplitter extends IPSModule
         ###Step 2: Obtain an authorization code
 
         $ch = curl_init();
-        curl_setopt($ch, CURLOPT_USERAGENT, 'Symcon/' . IPS_GetKernelVersion());
+        curl_setopt($ch, CURLOPT_USERAGENT, 'Symcon/5.6');// . IPS_GetKernelVersion());
         curl_setopt($ch, CURLOPT_URL, $GetUrl);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_TIMEOUT, 30);
@@ -329,10 +335,14 @@ class TeslaSplitter extends IPSModule
         ];
         curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($postData));
         $apiResult = curl_exec($ch);
+        IPS_LogMessage('Setp 2 URL', $GetUrl);
+        IPS_LogMessage('Setp 2 Result', $apiResult);
         $header_len = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
         $header = substr($apiResult, 0, $header_len);
-        $this->grabCookies($header);
+        IPS_LogMessage('Setp 2 Header', $header);
+        //$this->grabCookies($header);
         curl_close($ch);
+
         $codePart = explode('https://auth.tesla.com/void/callback?code=', $apiResult);
         $code = explode('&', $codePart[1])[0];
         //print 'CODE'.$code;exit;
@@ -340,7 +350,7 @@ class TeslaSplitter extends IPSModule
         ###Step 3: Exchange authorization code for bearer token
 
         $ch = curl_init();
-        curl_setopt($ch, CURLOPT_USERAGENT, 'Symcon/' . IPS_GetKernelVersion());
+        curl_setopt($ch, CURLOPT_USERAGENT, 'Symcon/5.6');// . IPS_GetKernelVersion());
         curl_setopt($ch, CURLOPT_URL, $this->token_UrlNew);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_TIMEOUT, 30);
@@ -504,7 +514,6 @@ class TeslaSplitter extends IPSModule
         $data = explode("\n", $output);
         $headers['status'] = $data[0];
         array_shift($data);
-        IPS_LogMessage('data', print_r($data, true));
         $cookies = [];
         foreach ($data as $part) {
             $middle = explode(':', $part, 2);
