@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 //declare(strict_types=1);
 
 class TeslaSplitter extends IPSModule
@@ -68,7 +70,7 @@ class TeslaSplitter extends IPSModule
         $FormElementCount = 4;
         if ($EMail || $Password || $Client_ID || $Client_Secret != '') {
             $Vehicles = $this->getVehicles();
-            if is_array($Vehicles) {
+            if (is_array($Vehicles)) {
                 if ($Vehicles['count'] > 0) {
                     $Form['elements'][$FormElementCount]['type'] = 'Select';
                     $Form['elements'][$FormElementCount]['name'] = 'Vehicles';
