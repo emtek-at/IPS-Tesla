@@ -68,20 +68,22 @@ class TeslaSplitter extends IPSModule
         $FormElementCount = 4;
         if ($EMail || $Password || $Client_ID || $Client_Secret != '') {
             $Vehicles = $this->getVehicles();
-            if ($Vehicles['count'] > 0) {
-                $Form['elements'][$FormElementCount]['type'] = 'Select';
-                $Form['elements'][$FormElementCount]['name'] = 'Vehicles';
-                $Form['elements'][$FormElementCount]['caption'] = 'Vehicles';
-                $selectOptions[0]['caption'] = $this->Translate('Please select a car!');
-                $selectOptions[0]['value'] = '0';
-                $optionsElementCount = 1;
-                foreach ($Vehicles['response'] as $Vehicle) {
-                    $selectOptions[$optionsElementCount]['caption'] = $Vehicle['display_name'];
-                    $selectOptions[$optionsElementCount]['value'] = strval($Vehicle['id_s']);
-                    $this->SendDebug('Form', $Vehicle['id'], 0);
-                    $optionsElementCount++;
+            if is_array($Vehicles) {
+                if ($Vehicles['count'] > 0) {
+                    $Form['elements'][$FormElementCount]['type'] = 'Select';
+                    $Form['elements'][$FormElementCount]['name'] = 'Vehicles';
+                    $Form['elements'][$FormElementCount]['caption'] = 'Vehicles';
+                    $selectOptions[0]['caption'] = $this->Translate('Please select a car!');
+                    $selectOptions[0]['value'] = '0';
+                    $optionsElementCount = 1;
+                    foreach ($Vehicles['response'] as $Vehicle) {
+                        $selectOptions[$optionsElementCount]['caption'] = $Vehicle['display_name'];
+                        $selectOptions[$optionsElementCount]['value'] = strval($Vehicle['id_s']);
+                        $this->SendDebug('Form', $Vehicle['id'], 0);
+                        $optionsElementCount++;
+                    }
+                    $Form['elements'][$FormElementCount]['options'] = $selectOptions;
                 }
-                $Form['elements'][$FormElementCount]['options'] = $selectOptions;
             }
         }
         return json_encode($Form);
