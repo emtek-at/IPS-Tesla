@@ -279,7 +279,7 @@ class TeslaSplitter extends IPSModule
         $GetUrl = $this->accessUrl . '?' . http_build_query($data);
 
         $ch = curl_init();
-        curl_setopt($ch, CURLOPT_USERAGENT, 'Symcon/5.6');// . IPS_GetKernelVersion());
+        curl_setopt($ch, CURLOPT_USERAGENT, 'Symcon/5.7');// . IPS_GetKernelVersion());
         curl_setopt($ch, CURLOPT_URL, $GetUrl);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_TIMEOUT, 30);
