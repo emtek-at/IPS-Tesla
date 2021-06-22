@@ -339,7 +339,7 @@ class TeslaSplitter extends IPSModule
         $this->SendDebug('Step 2 Result', $apiResult, 0);
         $header_len = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
         $header = substr($apiResult, 0, $header_len);
-        $this->SendDebug('Step 2 Header', $Header, 0);
+        $this->SendDebug('Step 2 Header', $header, 0);
         //$this->grabCookies($header);
         curl_close($ch);
 
