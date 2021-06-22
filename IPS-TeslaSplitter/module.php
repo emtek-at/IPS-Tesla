@@ -322,6 +322,7 @@ class TeslaSplitter extends IPSModule
         curl_setopt($ch, CURLOPT_ENCODING, 'deflate');
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt ($ch, CURLOPT_SSLVERSION,CURL_SSLVERSION_MAX_TLSv1_2); // Force TLS1.2
 
         curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/x-www-form-urlencoded']);
         $postData = [
