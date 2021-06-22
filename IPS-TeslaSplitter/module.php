@@ -279,23 +279,22 @@ class TeslaSplitter extends IPSModule
         $GetUrl = $this->accessUrl . '?' . http_build_query($data);
 
         $ch = curl_init();
-        curl_setopt($ch, CURLOPT_USERAGENT, 'Symcon/5.7');// . IPS_GetKernelVersion());
+        curl_setopt($ch, CURLOPT_USERAGENT, 'Symcon/5.7'); // . IPS_GetKernelVersion());
         curl_setopt($ch, CURLOPT_URL, $GetUrl);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_TIMEOUT, 30);
         curl_setopt($ch, CURLOPT_HEADER, 1);
         curl_setopt($ch, CURLINFO_HEADER_OUT, 1);
 
-        
         $apiResult = curl_exec($ch);
         $HederOut = curl_getinfo($ch, CURLINFO_HEADER_OUT);
         $header_len = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
         $header = substr($apiResult, 0, $header_len);
         $this->grabCookies($header);
         curl_close($ch);
-        IPS_LogMessage('Setp 1 URL', $GetUrl);
-        IPS_LogMessage('Setp 1 Result', $apiResult);
-        IPS_LogMessage('Setp 1 HederOut', $HederOut);
+        $this->SendDebug('Step 1 URL', $GetUrl, 0);
+        $this->SendDebug('Step 1 Result', $apiResult, 0);
+        $this->SendDebug('Step 1 HederOut', $HederOut, 0);
         $body = substr($apiResult, $header_len);
 
         $dom = new DomDocument();
@@ -312,7 +311,7 @@ class TeslaSplitter extends IPSModule
         ###Step 2: Obtain an authorization code
 
         $ch = curl_init();
-        curl_setopt($ch, CURLOPT_USERAGENT, 'Symcon/5.6');// . IPS_GetKernelVersion());
+        curl_setopt($ch, CURLOPT_USERAGENT, 'Symcon/5.6'); // . IPS_GetKernelVersion());
         curl_setopt($ch, CURLOPT_URL, $GetUrl);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_TIMEOUT, 30);
@@ -322,7 +321,7 @@ class TeslaSplitter extends IPSModule
         curl_setopt($ch, CURLOPT_ENCODING, 'deflate');
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-        curl_setopt ($ch, CURLOPT_SSLVERSION,CURL_SSLVERSION_MAX_TLSv1_2); // Force TLS1.2
+        curl_setopt($ch, CURLOPT_SSLVERSION, CURL_SSLVERSION_MAX_TLSv1_2); // Force TLS1.2
 
         curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/x-www-form-urlencoded']);
         $postData = [
@@ -336,11 +335,11 @@ class TeslaSplitter extends IPSModule
         ];
         curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($postData));
         $apiResult = curl_exec($ch);
-        IPS_LogMessage('Setp 2 URL', $GetUrl);
-        IPS_LogMessage('Setp 2 Result', $apiResult);
+        $this->SendDebug('Step 2 URL', $GetUrl, 0);
+        $this->SendDebug('Step 2 Result', $apiResult, 0);
         $header_len = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
         $header = substr($apiResult, 0, $header_len);
-        IPS_LogMessage('Setp 2 Header', $header);
+        $this->SendDebug('Step 2 Header', $Header, 0);
         //$this->grabCookies($header);
         curl_close($ch);
 
@@ -351,7 +350,7 @@ class TeslaSplitter extends IPSModule
         ###Step 3: Exchange authorization code for bearer token
 
         $ch = curl_init();
-        curl_setopt($ch, CURLOPT_USERAGENT, 'Symcon/5.6');// . IPS_GetKernelVersion());
+        curl_setopt($ch, CURLOPT_USERAGENT, 'Symcon/5.6'); // . IPS_GetKernelVersion());
         curl_setopt($ch, CURLOPT_URL, $this->token_UrlNew);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_TIMEOUT, 30);
