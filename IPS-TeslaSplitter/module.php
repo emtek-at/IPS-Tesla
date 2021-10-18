@@ -486,6 +486,7 @@ class TeslaSplitter extends IPSModule
     public function resetPairing()
     {
         $this->WriteAttributeString('AccessToken', '');
+        $this->WriteAttributeInteger('expires_in', 0);
     }
 
     private function getVehicles()
@@ -496,7 +497,7 @@ class TeslaSplitter extends IPSModule
 
     private function sendRequest(string $endpoint, array $params = [], string $method = 'GET')
     {
-        //Old Loing
+        //Old Login
         $accessToken = $this->ReadAttributeString('Token');
         $tokenExpires = $this->ReadAttributeString('TokenExpires');
 
