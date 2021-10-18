@@ -483,6 +483,11 @@ class TeslaSplitter extends IPSModule
         //$this->WriteAttributeString('Token', $apiResult['access_token']);
     }
 
+    public function resetPairing()
+    {
+        $this->WriteAttributeString('AccessToken', '');
+    }
+
     private function getVehicles()
     {
         $result = $this->sendRequest('/vehicles');
