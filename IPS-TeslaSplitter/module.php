@@ -27,12 +27,16 @@ class TeslaSplitter extends IPSModule
 
         $this->RegisterPropertyBoolean('AlternativLogin', true);
         $this->RegisterPropertyString('AccessToken', '');
-        $this->RegisterPropertyString('expires_in', '');
         $this->RegisterPropertyString('RefreshToken', '');
 
         $this->RegisterPropertyInteger('Interval', 5);
         $this->RegisterPropertyString('Vehicles', '');
 
+        $this->RegisterAttributeString('RefreshToken', '');
+        $this->RegisterAttributeString('AccessToken', '');
+        $this->RegisterAttributeString('expires_in', '');
+
+        //Old Login
         $this->RegisterAttributeString('Token', '');
         $this->RegisterAttributeString('TokenExpires', '');
 
@@ -48,7 +52,7 @@ class TeslaSplitter extends IPSModule
 
     public function GetConfigurationForm()
     {
-        //$Form = json_decode(file_get_contents(__DIR__ . '/form.json'), true);
+        $Form = json_decode(file_get_contents(__DIR__ . '/form.json'), true);
         $Form = [];
 
         $Form['elements'][0]['type'] = 'ValidationTextBox';
@@ -72,23 +76,20 @@ class TeslaSplitter extends IPSModule
         $Form['elements'][4]['caption'] = 'Alternativer Login';
 
         $Form['elements'][5]['type'] = 'ValidationTextBox';
+        $Form['elements'][5]['visible'] = true;
         $Form['elements'][5]['name'] = 'AccessToken';
         $Form['elements'][5]['caption'] = 'AccessToken';
 
-        $Form['elements'][6]['type'] = 'SelectDate';
-        $Form['elements'][6]['name'] = 'expires_in';
-        $Form['elements'][6]['caption'] = 'Token Expire';
-
-        $Form['elements'][7]['type'] = 'ValidationTextBox';
-        $Form['elements'][7]['name'] = 'RefreshToken';
-        $Form['elements'][7]['caption'] = 'RefreshToken';
+        $Form['elements'][6]['type'] = 'ValidationTextBox';
+        $Form['elements'][6]['name'] = 'RefreshToken';
+        $Form['elements'][6]['caption'] = 'RefreshToken';
 
         $EMail = $this->ReadPropertyString('EMail');
         $Password = $this->ReadPropertyString('Password');
         $Client_ID = $this->ReadPropertyString('Client_ID');
         $Client_Secret = $this->ReadPropertyString('Client_Secret');
 
-        $FormElementCount = 8;
+        $FormElementCount = 7;
         if ($EMail || $Password || $Client_ID || $Client_Secret != '') {
             $Vehicles = $this->getVehicles();
             if (is_array($Vehicles)) {
@@ -314,7 +315,6 @@ class TeslaSplitter extends IPSModule
         $this->grabCookies($header);
         curl_close($ch);
         $this->SendDebug('Step 1 URL', $GetUrl, 0);
-        IPS_LogMessage('Step 1', $apiResult);
         $this->SendDebug('Step 1 Result', $apiResult, 0);
         $this->SendDebug('Step 1 HederOut', $HederOut, 0);
         $body = substr($apiResult, $header_len);
@@ -359,7 +359,6 @@ class TeslaSplitter extends IPSModule
         $apiResult = curl_exec($ch);
         $this->SendDebug('Step 2 URL', $GetUrl, 0);
         $this->SendDebug('Step 2 Result', $apiResult, 0);
-        IPS_LogMessage('Step 2', $apiResult);
         $this->LogMessage($apiResult, KL_DEBUG);
         $header_len = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
         $header = substr($apiResult, 0, $header_len);
@@ -438,13 +437,13 @@ class TeslaSplitter extends IPSModule
         return true;
     }
 
-    private function getVehicles()
+    public function refreshToken()
     {
-        $result = $this->sendRequest('/vehicles');
-        return $result;
-    }
-
-    public function refreshToken() {
+        if ($this->ReadAttributeString('AccessToken') == '') {
+            $accessToken = $this->ReadPropertyString('AccessToken');
+        } else {
+            $accessToken = $this->ReadAttributeString('AccessToken');
+        }
 
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, 'https://auth.tesla.com/oauth2/v3/token');
@@ -457,43 +456,59 @@ class TeslaSplitter extends IPSModule
             'Accept: application/json',
             'User-Agent: Mozilla/5.0 (Linux; Android 9.0.0; VS985 4G Build/LRX21Y; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/58.0.3029.83 Mobile Safari/537.36',
             'X-Tesla-User-Agent: TeslaApp/3.4.4-350/fad4a582e/android/9.0.0',
-            'Authorization: Bearer ' . $this->ReadPropertyString('AccessToken'),
+            'Authorization: Bearer ' . $accessToken,
         ]);
 
-          $params['grant_type'] = 'refresh_token';
-          $params['client_id'] = 'ownerapi';
-          $params['refresh_token'] = $this->ReadPropertyString('RefreshToken');
-          $params['refrescopesh_token'] = 'openid email offline_access';
-          curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($params));
-          $apiResult = curl_exec($ch);
-          $headerInfo = curl_getinfo($ch);
-          $apiResultJson = json_decode($apiResult, true);
-          curl_close($ch);
+        $params['grant_type'] = 'refresh_token';
+        $params['client_id'] = 'ownerapi';
+        $params['refresh_token'] = $this->ReadPropertyString('RefreshToken');
+        $params['refrescopesh_token'] = 'openid email offline_access';
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($params));
+        $apiResultJSON = curl_exec($ch);
+        $headerInfo = curl_getinfo($ch);
+        $apiResult = json_decode($apiResultJSON, true);
+        curl_close($ch);
+        IPS_LogMessage('Refresh', $apiResultJSON);
+        if (is_array($apiResult)) {
+            if (array_key_exists('access_token', $apiResult)) {
+                $this->WriteAttributeString('AccessToken', $apiResult['access_token']);
+            }
+            if (array_key_exists('expires_in', $apiResult)) {
+                $this->WriteAttributeString('expires_in', $apiResult['expires_in']);
+            }
+        }
 
-          IPS_LogMessage('apiResult', print_r($apiResultJson,true));
+        $this->SendDebug('Tokens', json_encode($apiResult), 0);
+        //IPS_LogMessage('Refresh', print_r($apiResult, true));
+        //$this->WriteAttributeString('Token', $apiResult['access_token']);
+    }
 
-
-
+    private function getVehicles()
+    {
+        $result = $this->sendRequest('/vehicles');
+        return $result;
     }
 
     private function sendRequest(string $endpoint, array $params = [], string $method = 'GET')
     {
+        //Old Loing
         $accessToken = $this->ReadAttributeString('Token');
         $tokenExpires = $this->ReadAttributeString('TokenExpires');
-        
-        $accessToken = $this->ReadPropertyString('AccessToken');
-        $tokenExpiresArray =  json_decode($this->ReadPropertyString('expires_in'), true);
-        $tokenExpires = $tokenExpiresArray['year']. '-'. $tokenExpiresArray['month']. '-'. $tokenExpiresArray['day'];
-        $tokenExpires = strtotime($tokenExpires);
+
+        if ($this->ReadAttributeString('AccessToken') == '') {
+            $accessToken = $this->ReadPropertyString('AccessToken');
+        } else {
+            $expires_in = $this->ReadAttributeString('expires_in');
+            $tokenExpires = time() + $expires_in;
+
+            if (time() >= intval($tokenExpires)) {
+                $this->refreshToken();
+            }
+            $accessToken = $this->ReadAttributeString('AccessToken');
+        }
+
         IPS_LogMessage('time', time());
         IPS_LogMessage('tokenExpires', $tokenExpires);
-        $this->WriteAttributeString('TokenExpires', $this->ReadPropertyString('expires_in'));
-
-        if ($accessToken == '' || time() >= intval($tokenExpires)) {
-            //if ($this->FetchAccessToken()) {
-            //    $accessToken = $this->ReadAttributeString('Token');
-            //}
-        }
 
         $ch = curl_init();
         $this->SendDebug(__FUNCTION__ . ' URL', $this->base_url . $endpoint, 0);
@@ -524,7 +539,7 @@ class TeslaSplitter extends IPSModule
         $apiResultJson = json_decode($apiResult, true);
         curl_close($ch);
 
-        if(is_array($apiResultJson)) {
+        if (is_array($apiResultJson)) {
             if (array_key_exists('error', $apiResultJson)) {
                 $this->SendDebug(__FUNCTION__, $apiResultJson['error'], 0);
                 if (fnmatch('*vehicle unavailable*', $apiResultJson['error'])) {
@@ -532,11 +547,10 @@ class TeslaSplitter extends IPSModule
                     return false;
                 }
             }
-        } else{
+        } else {
             IPS_LogMessage('Tesla', 'Vehicle unavailable');
             return false;
         }
-
 
         $result = [];
         if ($apiResult === false) {

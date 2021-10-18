@@ -7,9 +7,7 @@
     { "name": "Client_Secret", "type": "ValidationTextBox", "caption": "Client Secret" },
 
     { "type": "CheckBox", "name": "AlternativLogin", "caption": "Alternativer Login" },
-    { "name": "AccessToken", "type": "ValidationTextBox", "caption": "AccessToken" },
-    { "type": "SelectDate", "name": "expires_in", "caption": "Token Expire" },
-
+    { "name": "AccessToken", "type": "ValidationTextBox", "visible": false,  "caption": "AccessToken" },
     { "name": "RefreshToken", "type": "ValidationTextBox", "caption": "RefreshToken" }
   ]
 }
