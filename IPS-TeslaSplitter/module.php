@@ -34,7 +34,7 @@ class TeslaSplitter extends IPSModule
 
         $this->RegisterAttributeString('RefreshToken', '');
         $this->RegisterAttributeString('AccessToken', '');
-        $this->RegisterAttributeString('expires_in', '');
+        $this->RegisterAttributeInteger('expires_in', 0);
 
         //Old Login
         $this->RegisterAttributeString('Token', '');
@@ -501,7 +501,7 @@ class TeslaSplitter extends IPSModule
             $expires_in = $this->ReadAttributeString('expires_in');
             $tokenExpires = time() + $expires_in;
 
-            if (time() >= intval($tokenExpires)) {
+            if (time() >= intval($tokenExpires) || ($this->ReadAttributeString('expires_in') == 0)) {
                 $this->refreshToken();
             }
             $accessToken = $this->ReadAttributeString('AccessToken');
