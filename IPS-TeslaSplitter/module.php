@@ -474,7 +474,7 @@ class TeslaSplitter extends IPSModule
                 $this->WriteAttributeString('AccessToken', $apiResult['access_token']);
             }
             if (array_key_exists('expires_in', $apiResult)) {
-                $this->WriteAttributeString('expires_in', $apiResult['expires_in']);
+                $this->WriteAttributeInteger('expires_in', $apiResult['expires_in']);
             }
         }
 
@@ -504,10 +504,10 @@ class TeslaSplitter extends IPSModule
         if ($this->ReadAttributeString('AccessToken') == '') {
             $accessToken = $this->ReadPropertyString('AccessToken');
         } else {
-            $expires_in = $this->ReadAttributeString('expires_in');
+            $expires_in = $this->ReadAttributeInteger('expires_in');
             $tokenExpires = time() + $expires_in;
 
-            if (time() >= intval($tokenExpires) || ($this->ReadAttributeString('expires_in') == 0)) {
+            if (time() >= intval($tokenExpires) || ($this->ReadAttributeInteger('expires_in') == 0)) {
                 $this->refreshToken();
             }
             $accessToken = $this->ReadAttributeString('AccessToken');
