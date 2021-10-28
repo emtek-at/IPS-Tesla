@@ -507,7 +507,7 @@ class TeslaSplitter extends IPSModule
             $expires_in = $this->ReadAttributeInteger('expires_in');
             $tokenExpires = time() + $expires_in;
 
-            if (time() >= intval($tokenExpires) || ($this->ReadAttributeInteger('expires_in') == 0)) {
+            if (time() >= intval($tokenExpires - 1800) || ($this->ReadAttributeInteger('expires_in') == 0)) {
                 $this->refreshToken();
             }
             $accessToken = $this->ReadAttributeString('AccessToken');
