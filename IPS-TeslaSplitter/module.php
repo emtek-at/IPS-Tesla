@@ -35,6 +35,7 @@ class TeslaSplitter extends IPSModule
         $this->RegisterAttributeString('RefreshToken', '');
         $this->RegisterAttributeString('AccessToken', '');
         $this->RegisterAttributeInteger('expires_in', 0);
+        $this->RegisterAttributeInteger('AccessTokenExpiresAt', 0);
 
         //Old Login
         $this->RegisterAttributeString('Token', '');
@@ -462,7 +463,7 @@ class TeslaSplitter extends IPSModule
         $params['grant_type'] = 'refresh_token';
         $params['client_id'] = 'ownerapi';
         $params['refresh_token'] = $this->ReadPropertyString('RefreshToken');
-        $params['refrescopesh_token'] = 'openid email offline_access';
+        $params['scope'] = 'openid email offline_access';
         curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($params));
         $apiResultJSON = curl_exec($ch);
         $headerInfo = curl_getinfo($ch);
@@ -474,7 +475,7 @@ class TeslaSplitter extends IPSModule
                 $this->WriteAttributeString('AccessToken', $apiResult['access_token']);
             }
             if (array_key_exists('expires_in', $apiResult)) {
-                $this->WriteAttributeInteger('expires_in', $apiResult['expires_in']);
+                $this->WriteAttributeInteger('AccessTokenExpiresAt', time()+$apiResult['expires_in']-10);
             }
         }
 
@@ -486,7 +487,7 @@ class TeslaSplitter extends IPSModule
     public function resetPairing()
     {
         $this->WriteAttributeString('AccessToken', '');
-        $this->WriteAttributeInteger('expires_in', 0);
+        $this->WriteAttributeInteger('AccessTokenExpiresAt', 0);
     }
 
     private function getVehicles()
@@ -497,24 +498,23 @@ class TeslaSplitter extends IPSModule
 
     private function sendRequest(string $endpoint, array $params = [], string $method = 'GET')
     {
-        //Old Login
-        $accessToken = $this->ReadAttributeString('Token');
-        $tokenExpires = $this->ReadAttributeString('TokenExpires');
+        $accessToken = '';
 
         if ($this->ReadAttributeString('AccessToken') == '') {
-            $accessToken = $this->ReadPropertyString('AccessToken');
-        } else {
-            $expires_in = $this->ReadAttributeInteger('expires_in');
-            $tokenExpires = time() + $expires_in;
+            $accessToken = $this->ReadPropertyString('AccessToken'); // Get Token from User Config
+        }else {
+            $accessToken = $this->ReadAttributeString('AccessToken');
+        }
+        $tokenExpires = $this->ReadAttributeInteger('AccessTokenExpiresAt');
 
-            if (time() >= intval($tokenExpires - 1800) || ($this->ReadAttributeInteger('expires_in') == 0)) {
-                $this->refreshToken();
-            }
+
+        if (time() >= ($tokenExpires - 1800)) {
+            $this->refreshToken();
             $accessToken = $this->ReadAttributeString('AccessToken');
         }
 
-        IPS_LogMessage('time', time());
-        IPS_LogMessage('tokenExpires', $tokenExpires);
+        IPS_LogMessage('Tesla', 'sendRequest at: '.time());
+        IPS_LogMessage('tokenExpires', $tokenExpires.' unix timestamp');
 
         $ch = curl_init();
         $this->SendDebug(__FUNCTION__ . ' URL', $this->base_url . $endpoint, 0);
