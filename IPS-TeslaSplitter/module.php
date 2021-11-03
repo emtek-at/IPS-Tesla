@@ -480,6 +480,7 @@ class TeslaSplitter extends IPSModule
         }
 
         $this->SendDebug('Tokens', json_encode($apiResult), 0);
+        IPS_LogMessage('Tesla', 'next Token refresh at '.date('H:i:s, d.m', $this->ReadAttributeInteger('AccessTokenExpiresAt')));
         //IPS_LogMessage('Refresh', print_r($apiResult, true));
         //$this->WriteAttributeString('Token', $apiResult['access_token']);
     }
