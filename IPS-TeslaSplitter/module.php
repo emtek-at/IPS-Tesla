@@ -262,7 +262,7 @@ class TeslaSplitter extends IPSModule
         return json_encode($result);
     }
 
-    public function base64url_encode($data)
+    public function base64url_encode(string $data)
     {
         return rtrim(strtr(base64_encode($data), '+/', '-_'), '=');
     }
@@ -514,8 +514,7 @@ class TeslaSplitter extends IPSModule
             $accessToken = $this->ReadAttributeString('AccessToken');
         }
 
-        IPS_LogMessage('Tesla', 'sendRequest at: '.time());
-        IPS_LogMessage('tokenExpires', $tokenExpires.' unix timestamp');
+        IPS_LogMessage('Tesla sendRequest', 'sent at: '.time().' token expires at: '.$tokenExpires.', valid for: '.($tokenExpires-time()));
 
         $ch = curl_init();
         $this->SendDebug(__FUNCTION__ . ' URL', $this->base_url . $endpoint, 0);
