@@ -637,4 +637,10 @@ class TeslaSplitter extends IPSModule
             $this->setCookies($knownCookies);
         }
     }
+
+    private function debug($sender, $message, $force=false){
+        if($this->ReadPropertyBoolean('DebugActive') || $force){
+            $this->SendDebug($sender, $message, 0);
+        }
+    }
 }
