@@ -37,6 +37,8 @@ class TeslaSplitter extends IPSModule
         $this->RegisterAttributeInteger('expires_in', 0);
         $this->RegisterAttributeInteger('AccessTokenExpiresAt', 0);
 
+        $this->RegisterPropertyBoolean('DebugActive', false);
+
         //Old Login
         $this->RegisterAttributeString('Token', '');
         $this->RegisterAttributeString('TokenExpires', '');
@@ -111,6 +113,12 @@ class TeslaSplitter extends IPSModule
                 }
             }
         }
+
+        $FormElementCount++;
+        $Form['elements'][$FormElementCount]['type'] = 'CheckBox';
+        $Form['elements'][$FormElementCount]['name'] = 'DebugActive';
+        $Form['elements'][$FormElementCount]['caption'] = 'Log Debug Meldungen';
+
         return json_encode($Form);
     }
 
