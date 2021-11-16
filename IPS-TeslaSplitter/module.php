@@ -106,7 +106,6 @@ class TeslaSplitter extends IPSModule
                     foreach ($Vehicles['response'] as $Vehicle) {
                         $selectOptions[$optionsElementCount]['caption'] = $Vehicle['display_name'];
                         $selectOptions[$optionsElementCount]['value'] = strval($Vehicle['id_s']);
-                        $this->logger('Form', $Vehicle['id']);
                         $optionsElementCount++;
                     }
                     $Form['elements'][$FormElementCount]['options'] = $selectOptions;
@@ -636,6 +635,7 @@ class TeslaSplitter extends IPSModule
     }
 
     private function logger(string $sender, string $message, int $type=KL_DEBUG, bool $force=false){
+        $this->SendDebug($sender.' fkt', $message, 0);
         switch($type){
             case KL_DEBUG:
                 if($this->ReadPropertyBoolean('DebugActive') || $force){
