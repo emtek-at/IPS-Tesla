@@ -635,7 +635,7 @@ class TeslaSplitter extends IPSModule
         }
     }
 
-    private function logger($sender, $message, $type=KL_DEBUG, $force=false){
+    private function logger(string $sender, string $message, int $type=KL_DEBUG, bool $force=false){
         switch($type){
             case KL_DEBUG:
                 if($this->ReadPropertyBoolean('DebugActive') || $force){
