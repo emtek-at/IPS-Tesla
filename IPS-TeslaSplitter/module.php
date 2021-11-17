@@ -517,7 +517,6 @@ class TeslaSplitter extends IPSModule
             $this->refreshToken();
             $accessToken = $this->ReadAttributeString('AccessToken');
         }
-        $this->SendDebug(__FUNCTION__.'_DIRECT', 'sent at: '.time().' token expires at: '.$tokenExpires.', valid for: '.($tokenExpires-time()), 0);
         $this->logger(__FUNCTION__, 'sent at: '.time().' token expires at: '.$tokenExpires.', valid for: '.($tokenExpires-time()));
 
         $ch = curl_init();
@@ -635,15 +634,15 @@ class TeslaSplitter extends IPSModule
     }
 
     private function logger(string $sender, string $message, int $type=KL_DEBUG, bool $force=false){
-        $this->SendDebug($sender.' fkt', $message, 0);
+
         switch($type){
             case KL_DEBUG:
                 if($this->ReadPropertyBoolean('DebugActive') || $force){
-                    $this->SendDebug($sender, $message, 0);
+                    $this->LogMessage($sender.' - '.$message, $type);
                 }
                 break;
             default:
-                $this->logMessage($sender.' - '.$message, $type);
+                $this->LogMessage($sender.' - '.$message, $type);
         }
 
     }
