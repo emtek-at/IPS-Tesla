@@ -37,7 +37,7 @@ class TeslaSplitter extends IPSModule
         $this->RegisterAttributeInteger('expires_in', 0);
         $this->RegisterAttributeInteger('AccessTokenExpiresAt', 0);
 
-        $this->RegisterPropertyBoolean('DebugActive', false);
+        $this->RegisterPropertyBoolean('ShowDebugMessages', false);
 
         //Old Login
         $this->RegisterAttributeString('Token', '');
@@ -115,8 +115,8 @@ class TeslaSplitter extends IPSModule
 
         $FormElementCount++;
         $Form['elements'][$FormElementCount]['type'] = 'CheckBox';
-        $Form['elements'][$FormElementCount]['name'] = 'DebugActive';
-        $Form['elements'][$FormElementCount]['caption'] = 'Log Debug Meldungen';
+        $Form['elements'][$FormElementCount]['name'] = 'ShowDebugMessages';
+        $Form['elements'][$FormElementCount]['caption'] = 'Zeige Debug Meldungen';
 
         return json_encode($Form);
     }
@@ -633,17 +633,10 @@ class TeslaSplitter extends IPSModule
         }
     }
 
-    private function logger(string $sender, string $message, int $type=KL_DEBUG, bool $force=false){
+    private function logger(string $sender, string $message, int $type=KL_DEBUG){
+        if($this->ReadPropertyBoolean('ShowDebugMessages') && $type==KL_DEBUG)
+            $type = KL_MESSAGE;
 
-        switch($type){
-            case KL_DEBUG:
-                if($this->ReadPropertyBoolean('DebugActive') || $force){
-                    $this->LogMessage($sender.' - '.$message, $type);
-                }
-                break;
-            default:
-                $this->LogMessage($sender.' - '.$message, $type);
-        }
-
+        $this->LogMessage($sender.' - '.$message, $type);
     }
 }
