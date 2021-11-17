@@ -544,9 +544,27 @@ class TeslaSplitter extends IPSModule
         }
 
         $apiResult = curl_exec($ch);
-        $headerInfo = curl_getinfo($ch);
-        $apiResultJson = json_decode($apiResult, true);
         curl_close($ch);
+
+        $result = [];
+        if ($apiResult === false) {
+            $result['errorcode'] = 0;
+            $result['errormessage'] = curl_error($ch);
+            $this->logger(__FUNCTION__, $result['errorcode'] . ': ' . $result['errormessage'], KL_ERROR);
+            return false;
+        }
+
+        $headerInfo = curl_getinfo($ch);
+        if (!in_array($headerInfo['http_code'], ['200', '201', '204'])) {
+            $errorMsg = $headerInfo['http_code'] . ': ';
+            if (isset($apiresult)) {
+                $errorMsg .= $apiresult;
+            }
+            $this->logger(__FUNCTION__, $errorMsg, KL_ERROR);
+            return false;
+        }
+
+        $apiResultJson = json_decode($apiResult, true);
 
         if (is_array($apiResultJson)) {
             if (array_key_exists('error', $apiResultJson)) {
@@ -558,22 +576,6 @@ class TeslaSplitter extends IPSModule
             }
         } else {
             $this->logger(__FUNCTION__, 'Vehicle unavailable');
-            return false;
-        }
-
-        $result = [];
-        if ($apiResult === false) {
-            $result['errorcode'] = 0;
-            $result['errormessage'] = curl_error($ch);
-            $this->logger(__FUNCTION__ . ' Error', $result['errorcode'] . ': ' . $result['errormessage']);
-            return false;
-        }
-        if (!in_array($headerInfo['http_code'], ['200', '201', '204'])) {
-            $result['errorcode'] = $headerInfo['http_code'];
-            if (isset($apiresult)) {
-                $result['errormessage'] = $apiresult;
-            }
-            $this->logger(__FUNCTION__ . ' Error', $result['errorcode']);
             return false;
         }
 
