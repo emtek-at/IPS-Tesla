@@ -544,7 +544,6 @@ class TeslaSplitter extends IPSModule
         }
 
         $apiResult = curl_exec($ch);
-        curl_close($ch);
 
         $result = [];
         if ($apiResult === false) {
@@ -555,6 +554,7 @@ class TeslaSplitter extends IPSModule
         }
 
         $headerInfo = curl_getinfo($ch);
+        curl_close($ch);
         if (!in_array($headerInfo['http_code'], ['200', '201', '204'])) {
             $errorMsg = $headerInfo['http_code'] . ': ';
             if (isset($apiresult)) {
