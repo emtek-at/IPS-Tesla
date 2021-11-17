@@ -517,7 +517,7 @@ class TeslaSplitter extends IPSModule
             $this->refreshToken();
             $accessToken = $this->ReadAttributeString('AccessToken');
         }
-
+        $this->SendDebug(__FUNCTION__.'_DIRECT', 'sent at: '.time().' token expires at: '.$tokenExpires.', valid for: '.($tokenExpires-time()), 0);
         $this->logger(__FUNCTION__, 'sent at: '.time().' token expires at: '.$tokenExpires.', valid for: '.($tokenExpires-time()));
 
         $ch = curl_init();
