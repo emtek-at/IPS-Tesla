@@ -634,16 +634,9 @@ class TeslaSplitter extends IPSModule
     }
 
     private function logger(string $sender, string $message, int $type=KL_DEBUG){
-        $show = $this->ReadPropertyBoolean('ShowDebugMessages') ? 'TR ' : 'FA ';
-        $show .= $type.' '.KL_DEBUG.'|';
-        if($this->ReadPropertyBoolean('ShowDebugMessages') && $type==KL_DEBUG)
-            $type = KL_WARNING;
-
-        $show .= $type.' ';
-
-        $this->LogMessage($show.$sender.' - '.$message, $type);
-
-        if($this->ReadPropertyBoolean('ShowDebugMessages'))
+        if($this->ReadPropertyBoolean('ShowDebugMessages') && ($type == KL_DEBUG || $type == KL_MESSAGE))
             IPS_LogMessage('TeslaSplitter '.$sender, $message);
+        else
+            $this->LogMessage($sender.' - '.$message, $type);
     }
 }
