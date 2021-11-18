@@ -48,7 +48,7 @@ class TeslaVehicleControl extends IPSModule
         IPS_SetIcon($IDChargeLimit, 'Battery');
         $this->EnableAction('ChargeLimit');
 
-        $this->RegisterVariableString('ChargingAmps', $this->Translate('Charging Amps'), 'Tesla.ChargingAmps', 9);
+        $this->RegisterVariableInteger('ChargingAmps', $this->Translate('Charging Amps'), 'Tesla.ChargingAmps', 9);
         $this->EnableAction('ChargingAmps');
 
         $this->RegisterVariableInteger('ClimateAutoConditioning', $this->Translate('Climate Auto Conditioning'), 'Tesla.ClimateAutoConditioning', 20);
